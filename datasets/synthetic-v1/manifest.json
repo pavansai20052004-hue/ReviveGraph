@@ -1,0 +1,39 @@
+{
+  "fixture_id": "revivegraph-synthetic-v1",
+  "fixture_version": 1,
+  "created_date": "2026-10-16",
+  "mode": "simulation",
+  "provenance": "synthetic:authored-with-ai-assistance-for-hackathon-preparation",
+  "source_description": "Invented institutional desktop inventory and illustrative assessments, profiles, costs and scenarios; no physical measurements, manufacturer certification, vendor quotes or repairs.",
+  "assessment_record_context": {
+    "source": "synthetic:fixture-author-assertion",
+    "recorded_date": "2026-10-16",
+    "reviewer": "fixture-author (synthetic simulation only)",
+    "acceptance_scope": "simulation-only; no physical technician assessment"
+  },
+  "owner_id": "RG-INST-01",
+  "owner_label": "Illustrative college fleet owner",
+  "csv_import_contract": "docs/ARCHITECTURE.md CSV schema v1; exactly the documented columns, with empty component location meaning stock. Sidecar JSON is fixture metadata, not an imported CSV contract change.",
+  "files": ["computers.csv", "components.csv", "board_profiles.json", "operation_costs.json", "scenarios.json"],
+  "expected_computers": 12,
+  "expected_components": 31,
+  "initial_state": {
+    "RG-PC-01": ["storage_faulty:RG-SSD-01"],
+    "RG-PC-02": ["ram_faulty:RG-RAM-02"],
+    "RG-PC-03": ["storage_faulty:RG-SSD-03"],
+    "RG-PC-04": ["ram_unknown:RG-RAM-04"],
+    "RG-PC-05": ["storage_missing"],
+    "RG-PC-06": ["ram_faulty:RG-RAM-06"],
+    "RG-PC-07": ["storage_faulty:RG-SSD-08"],
+    "RG-PC-08": ["storage_faulty:RG-SSD-09"],
+    "RG-PC-09": ["board_boot_support_unknown"],
+    "RG-PC-10": ["storage_unknown:RG-SSD-13"],
+    "RG-PC-11": ["base_faulty"],
+    "RG-PC-12": ["base_unknown"]
+  },
+  "initial_usable_count": 0,
+  "initial_unusable_count": 8,
+  "initial_unknown_count": 4,
+  "initial_not_certifiably_usable_count": 12,
+  "notes": "The two CSVs retain the proposed v1 import columns. Provenance and evidence references identify authored synthetic assertions, not actual diagnostic observations. Eight computers have a known faulty or missing blocker; four are uncertain and cannot be certified usable. Initial classification is derived for this fixture and is not a new CSV field."
+}

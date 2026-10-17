@@ -1,0 +1,13 @@
+asset_id,owner_id,board_profile_id,base_health,provenance
+RG-PC-01,RG-INST-01,RG-BOARD-D4-A,healthy,synthetic:base-01
+RG-PC-02,RG-INST-01,RG-BOARD-D4-A,healthy,synthetic:base-02
+RG-PC-03,RG-INST-01,RG-BOARD-D4-A,healthy,synthetic:base-03
+RG-PC-04,RG-INST-01,RG-BOARD-D4-B,healthy,synthetic:base-04
+RG-PC-05,RG-INST-01,RG-BOARD-D4-A,healthy,synthetic:base-05
+RG-PC-06,RG-INST-01,RG-BOARD-D3-A,healthy,synthetic:base-06
+RG-PC-07,RG-INST-01,RG-BOARD-D4-A,healthy,synthetic:base-07
+RG-PC-08,RG-INST-01,RG-BOARD-D3-A,healthy,synthetic:base-08
+RG-PC-09,RG-INST-01,RG-BOARD-D4-UNKNOWN,healthy,synthetic:base-09
+RG-PC-10,RG-INST-01,RG-BOARD-D4-A,healthy,synthetic:base-10
+RG-PC-11,RG-INST-01,RG-BOARD-D4-A,faulty,synthetic:base-11
+RG-PC-12,RG-INST-01,RG-BOARD-D3-A,unknown,synthetic:base-12

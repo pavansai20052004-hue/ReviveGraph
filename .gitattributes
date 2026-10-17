@@ -1,0 +1,4 @@
+# Registration hashes exact fixture bytes. Preserve all checkpoint file bytes
+# across Windows/Linux checkout without changing any global Git configuration.
+* -text
+*.png binary

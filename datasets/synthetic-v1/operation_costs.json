@@ -1,0 +1,17 @@
+{
+  "schema_version": "operation-costs-v1",
+  "currency": "INR",
+  "cost_unit": "paise",
+  "time_unit": "technician_minutes",
+  "provenance": "synthetic:illustrative-effort-and-cash-assumptions-not-quotes",
+  "source_ref": "SYN-V1-OPERATIONS",
+  "labor_cash_policy": "Cash amounts are assumed consumables and shop overhead only. Technician effort is separately constrained; no additional wage multiplier is applied.",
+  "operations": {
+    "prepare_target": {"cost_paise": 10000, "technician_minutes": 10},
+    "remove_ram": {"cost_paise": 2000, "technician_minutes": 5},
+    "remove_storage": {"cost_paise": 3000, "technician_minutes": 6},
+    "install_ram": {"cost_paise": 5000, "technician_minutes": 8},
+    "install_storage": {"cost_paise": 7000, "technician_minutes": 10},
+    "verify_target": {"cost_paise": 12000, "technician_minutes": 18}
+  }
+}

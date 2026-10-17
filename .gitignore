@@ -1,0 +1,58 @@
+# Dependencies, environments and caches
+node_modules/
+.venv/
+venv/
+env/
+.conda/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.cache/
+.vite/
+*.py[cod]
+*.tsbuildinfo
+
+# Generated builds, tests and logs (intended docs previews remain tracked)
+dist/
+build/
+coverage/
+htmlcov/
+.coverage*
+test-results/
+playwright-report/
+*.log
+*.log.*
+
+# Local databases and checkpoint archives
+data/
+*.sqlite*
+*.db
+*.db-shm
+*.db-wal
+*.db-journal
+/backups/
+
+# Credentials and local secrets; examples must contain placeholders only
+.env
+.env.*
+!.env.example
+.secrets/
+secrets/
+credentials*.json
+secrets*.json
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.kdbx
+.netrc
+.npmrc
+
+# Local operating-system metadata
+.DS_Store
+Thumbs.db
+Desktop.ini
+
