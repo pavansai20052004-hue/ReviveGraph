@@ -86,7 +86,7 @@ def inventory(connection, fleet_id):
 
 
 def create_app(db_path=None, fixture_root=None):
-    app = FastAPI(title="ReviveGraph foundation", version="0.1.0")
+    app = FastAPI(title="ReviveGraph recovery", version="0.2.0")
     app.state.db = Database(db_path or os.environ.get("REVIVEGRAPH_DB", str(ROOT / "data" / "revivegraph.sqlite3")))
     app.state.fixture_root = Path(fixture_root or ROOT / "datasets" / "synthetic-v1")
 
@@ -106,7 +106,7 @@ def create_app(db_path=None, fixture_root=None):
 
     @app.get("/api/v1/health")
     def health():
-        return {"status": "ok", "schema_version": 1, "rule_version": RULE_VERSION}
+        return {"status": "ok", "schema_version": 2, "rule_version": RULE_VERSION}
 
     @app.get("/api/v1/fixture-registrations")
     def registrations():
@@ -237,9 +237,11 @@ def create_app(db_path=None, fixture_root=None):
                       **{key: sum(c["usability"]["classification"] == key for c in computers) for key in ("usable", "unusable", "unknown")},
                       "healthy_components": sum(c["health"] == "healthy" for c in components),
                       "stock_components": sum(not c["location_asset_id"] for c in components)}
+            from .recovery import recovery_summary
+            optimization, recovery = recovery_summary(connection, fleet_id)
             return {"fleet_id": fleet_id, "mode": fleet["mode"] if fleet else "simulation", "revision": fleet["revision"] if fleet else 0,
                     "registration_id": fleet["registration_id"] if fleet else None, "counts": counts,
-                    "optimization": {"status": "Not calculated"}, "rule_version": RULE_VERSION}
+                    "optimization": optimization, "recovery": recovery, "rule_version": RULE_VERSION}
 
     @app.get("/api/v1/computers")
     def computers(fleet_id: str = "RG-DEMO-12", offset: int = Query(0, ge=0), limit: int = Query(100, ge=1, le=1000)):
@@ -319,4 +321,6 @@ def create_app(db_path=None, fixture_root=None):
                     "target_base_health": target["base_health"], "target_eligibility_reasons": target_blockers, "rule_version": RULE_VERSION,
                     "note": "Inspection only; this endpoint does not allocate, optimize or reserve parts."}
 
+    from .recovery import install_routes
+    install_routes(app, inventory, mutation_headers)
     return app

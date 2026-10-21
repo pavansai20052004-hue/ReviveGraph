@@ -24,7 +24,19 @@ export type Computer = {
 export type State = {
   fleet_id: string; revision: number; mode: string; registration_id: string | null; rule_version: string;
   counts: Record<'computers' | 'components' | 'usable' | 'unusable' | 'unknown' | 'healthy_components' | 'stock_components', number>;
-  optimization: { status: string };
+  optimization: { status: string; plan_id?: string; plan_status?: string; usable_final?: number; newly_recovered?: number; cost_paise?: number; technician_minutes?: number };
+  recovery?: { simulated_passes: number; physical_passes: number; plans: number; orders: number };
+}
+export type Allocation = { target_asset_id: string; ram_component_ids: string[]; storage_component_id: string }
+export type Operation = { operation: string; asset_id: string; component_id?: string; cost_paise: number; technician_minutes: number }
+export type Totals = { cost_paise: number; technician_minutes: number; transfers: number; usable_final: number; newly_recovered: number }
+export type WorkStep = { id: string; operation: string; component_id?: string; asset_id?: string; depends_on: string[]; required_checks: string[]; status: string; evidence_ref?: string; checks?: string[]; actor?: string; completed_at?: string }
+export type WorkOrder = { id: string; target_asset_id: string; status: string; steps: WorkStep[]; verification?: { outcome: string; evidence_ref: string } | null }
+export type Plan = {
+  id: string; input_hash: string; inventory_revision: number; scenario_id: string; parent_plan_id: string | null;
+  mode: string; context_id: string; status: string; budget_paise: number; time_minutes: number;
+  result: { allocations: Allocation[]; operations: Operation[]; totals: Totals; solver: { status: string; objectives_proven: unknown; engine_version?: string; termination_reason?: string }; baseline?: { totals?: Totals; allocations?: Allocation[]; [key: string]: unknown } };
+  comparison?: unknown; failed_component_ids?: string[]; work_orders: WorkOrder[]; created_at?: string;
 }
 export type Registration = { id: string; fixture_id: string; version: number; registration_hash: string; file_hashes: Record<string, string>; profile_count: number }
 export type Batch = {

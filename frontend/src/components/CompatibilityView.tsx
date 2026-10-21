@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { api, jsonMutation } from '@/api'
 import type { Compatibility, Component, Computer, Configuration } from '@/types'
 import { Button } from './ui/button'
 import { Badge, EmptyState, ErrorNotice, HealthBadge, Loading, Panel } from './ui/primitives'
+const InspectionGraph = lazy(() => import('./InspectionGraph').then(module => ({ default: module.InspectionGraph })))
 
 export function CompatibilityView({ computers, components, target, onTargetChange }: { computers: Computer[]; components: Component[]; target: string; onTargetChange: (id: string) => void }) {
   const [result, setResult] = useState<Compatibility | null>(null)
@@ -58,6 +59,7 @@ export function CompatibilityView({ computers, components, target, onTargetChang
         <Panel className="p-5"><span className="eyebrow">TARGET PROFILE · DETERMINISTIC RULES</span><h2>{target}</h2><p className="muted">{result.profile.id} · v{result.profile.version} · {result.profile.ram_generation ?? 'Unknown RAM'} UDIMM</p>
           <div className="inline-badges"><Badge tone="cyan">{result.rule_version}</Badge><Badge>Base: {result.target_base_health}</Badge></div>
           <p className="caption">Compatibility checks declared hardware. Health, owner and availability are checked separately. A faulty or unknown base cannot be a recovered target.</p>
+          <Suspense fallback={<Loading text="Loading graph controls…" />}><InspectionGraph result={result} items={filtered} components={components} selected={selected} onSelect={setSelected} /></Suspense>
         </Panel>
         <div className="table-scroll panel table-panel" tabIndex={0} role="region" aria-label="Compatibility decision table"><table><caption className="sr-only">Deterministic compatibility decisions and separate eligibility</caption><thead><tr><th>Component ID</th><th>Hardware</th><th>Eligibility</th><th>Current location</th></tr></thead><tbody>{filtered.map(item => <tr key={item.component_id} className={selected === item.component_id ? 'selected-row' : ''}><td><button className="text-link mono" onClick={() => setSelected(item.component_id)} aria-pressed={selected === item.component_id}>{item.component_id}</button></td><td><HealthBadge value={item.hardware.decision} /></td><td><Badge tone={item.eligibility.eligible ? 'success' : 'warning'}>{item.eligibility.eligible ? 'Eligible candidate' : 'Not eligible'}</Badge></td><td>{components.find(p => p.component_id === item.component_id)?.location_asset_id ?? 'Stock'}</td></tr>)}</tbody></table>{!filtered.length && <p className="p-5 muted">No decisions match these filters. Choose “All decisions” to reset.</p>}</div>
         <p className="caption">{filtered.length} of {result.items.length} decisions · no parts allocated or reserved</p>

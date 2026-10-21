@@ -1,5 +1,7 @@
 # Synthetic fixture v1
 
+**Application update, 20 October 2026:** original fixture/oracle bytes and handwritten examples are unchanged. The production application now registers these sidecars and computes its own allocations as documented in [RECOVERY_CONTRACT.md](RECOVERY_CONTRACT.md). Historical statements below about missing registration/optimizer refer to the fixture's 16 October creation stage; the actual current solved allocation is in [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md), not copied into the fixture.
+
 Status: **pre-event preparation, 16 October 2026**. The files in [`datasets/synthetic-v1/`](../datasets/synthetic-v1/) are invented demonstration inputs, not diagnostic readings, technician-approved assessments, vendor quotes, solver output or evidence of repaired computers. This document and the Python validator describe a constrained simulation. The Figma prototype remains illustrative and unchanged.
 
 ## Contract and provenance

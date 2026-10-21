@@ -1,0 +1,21 @@
+import { useMemo } from 'react'
+import { Background, Controls, MarkerType, Position, ReactFlow, type Edge as FlowEdge, type Node } from '@xyflow/react'
+import '@xyflow/react/dist/style.css'
+import type { Compatibility, Component, Edge } from '../types'
+
+/** A focused, read-only projection of backend inspection decisions.
+ * Dragging changes presentation only; users cannot author compatibility edges. */
+export function InspectionGraph({ result, items, components, selected, onSelect }: { result: Compatibility; items: Edge[]; components: Component[]; selected: string; onSelect: (id: string) => void }) {
+  const chosen = useMemo(() => [...items].sort((a, b) => Number(b.component_id === selected) - Number(a.component_id === selected) || Number(b.eligibility.eligible) - Number(a.eligibility.eligible) || a.component_id.localeCompare(b.component_id)).slice(0, 6), [items, selected])
+  const parts = new Map(components.map(part => [part.component_id, part]))
+  const nodes: Node[] = chosen.map((item, i) => {
+    const part = parts.get(item.component_id)
+    return { id: item.component_id, position: { x: 0, y: i * 100 }, sourcePosition: Position.Right, targetPosition: Position.Left, className: `inspection-node ${item.component_id === selected ? 'inspection-node-selected' : ''}`, ariaLabel: `${item.component_id}: ${item.hardware.decision}; ${item.eligibility.eligible ? 'eligible candidate' : 'not eligible'}`, data: { label: <div className="graph-node-copy"><strong>{item.component_id}</strong><small>{part?.type === 'ram' ? `${part.ram_generation ?? '?'} · ${part.capacity_gib ?? '?'} GiB` : `${part?.interface ?? '?'} · ${part?.capacity_gb ?? '?'} GB`}</small><span>{item.hardware.decision} · {item.eligibility.eligible ? 'eligible' : 'not eligible'}</span></div> } }
+  })
+  nodes.push({ id: result.target_asset_id, position: { x: 360, y: Math.max(0, (chosen.length - 1) * 50 - 5) }, targetPosition: Position.Left, className: 'inspection-node inspection-target', ariaLabel: `Target ${result.target_asset_id}`, data: { label: <div className="graph-node-copy"><strong>{result.target_asset_id}</strong><small>{result.profile.ram_generation ?? 'Unknown RAM'} UDIMM · SATA</small><span>8 GiB + 240 GB policy</span></div> } })
+  const edges: FlowEdge[] = chosen.map(item => {
+    const color = item.hardware.decision === 'compatible' ? 'var(--primary)' : item.hardware.decision === 'unknown' ? 'var(--warning)' : 'var(--error)'
+    return { id: `edge-${item.component_id}`, source: item.component_id, target: result.target_asset_id, type: 'smoothstep', label: item.hardware.decision, markerEnd: { type: MarkerType.ArrowClosed, color }, style: { stroke: color, strokeWidth: 1.5, strokeDasharray: item.hardware.decision === 'unknown' ? '3 4' : item.hardware.decision === 'incompatible' ? '8 4' : undefined }, labelStyle: { fill: color, fontSize: 11 }, labelBgStyle: { fill: 'var(--card)' }, interactionWidth: 18, data: { componentId: item.component_id }, ariaLabel: `${item.component_id} to ${result.target_asset_id}: ${item.hardware.decision}` }
+  })
+  return <div className="inspection-graph-section"><div className="step-heading"><h3>Interactive compatibility graph</h3><span className="caption">{chosen.length} of {items.length} filtered parts shown</span></div><p className="caption">Select a node or edge for rule evidence. Drag to arrange; pan, zoom and fit using the canvas controls. The table below lists every decision.</p><div className="inspection-graph" role="region" aria-label="Interactive deterministic compatibility graph"><ReactFlow key={`${result.target_asset_id}:${chosen.map(p => p.component_id).join(',')}`} defaultNodes={nodes} defaultEdges={edges} colorMode="dark" fitView fitViewOptions={{ padding: .2 }} minZoom={.25} maxZoom={2} nodesConnectable={false} edgesReconnectable={false} deleteKeyCode={null} onNodeClick={(_, node) => { if (node.id !== result.target_asset_id) onSelect(node.id) }} onEdgeClick={(_, edge) => onSelect(edge.data?.componentId as string)}><Background color="#2A4055" gap={24} /><Controls showInteractive={false} /></ReactFlow></div><p className="caption">Solid = compatible · dashed = incompatible · dotted = unknown. Health and reservation eligibility remain separate.</p></div>
+}

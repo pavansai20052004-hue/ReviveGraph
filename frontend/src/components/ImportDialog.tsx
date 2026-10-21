@@ -4,6 +4,7 @@ import { api, jsonMutation, mutationHeaders } from '@/api'
 import type { Batch, Registration } from '@/types'
 import { Button } from './ui/button'
 import { Badge, ErrorNotice, Loading, Panel } from './ui/primitives'
+import { Icon } from './ui/Icon'
 
 export function ImportDialog({ open, onOpenChange, onImported }: { open: boolean; onOpenChange: (open: boolean) => void; onImported: () => Promise<void> }) {
   const [registration, setRegistration] = useState<Registration | null>(null)
@@ -17,7 +18,7 @@ export function ImportDialog({ open, onOpenChange, onImported }: { open: boolean
   useEffect(() => {
     if (!open) return
     let active = true
-    api<{ items: Registration[] }>('/fixture-registrations').then(data => { if (active) setRegistration(data.items[0] ?? null) }).catch(e => { if (active) setError(e.message) })
+    api<{ items: Registration[] }>('/fixture-registrations').then(data => { if (active) setRegistration(current => current ?? data.items[0] ?? null) }).catch(e => { if (active) setError(e.message) })
     return () => { active = false }
   }, [open])
 
@@ -31,22 +32,38 @@ export function ImportDialog({ open, onOpenChange, onImported }: { open: boolean
       setRegistration(await api<Registration>('/fixture-registrations', jsonMutation({ fixture_id: 'revivegraph-synthetic-v1' })))
     })
   }
-  async function bundled() {
-    await action('Loading the disclosed CSV files…', async () => {
-      const responses = await Promise.all(['computers.csv', 'components.csv'].map(name => fetch(`/api/v1/bundled-fixture/${name}`)))
+  async function bundledFiles() {
+      const responses = await Promise.all(['computers.csv', 'components.csv'].map(name => fetch(`/api/v1/bundled-fixture/${name}`, { signal: AbortSignal.timeout(15000) })))
       if (responses.some(r => !r.ok)) throw new Error('Bundled CSV files could not be loaded. Check datasets/synthetic-v1 and retry.')
       const blobs = await Promise.all(responses.map(r => r.blob()))
-      setComputers(new File([blobs[0]], 'computers.csv', { type: 'text/csv' }))
-      setComponents(new File([blobs[1]], 'components.csv', { type: 'text/csv' })); clearPreview()
+      return [new File([blobs[0]], 'computers.csv', { type: 'text/csv' }), new File([blobs[1]], 'components.csv', { type: 'text/csv' })] as const
+  }
+  async function bundled() {
+    await action('Loading the disclosed CSV files…', async () => {
+      const [assets, parts] = await bundledFiles()
+      setComputers(assets); setComponents(parts); clearPreview()
+    })
+  }
+  async function previewFiles(rules: Registration, assets: File, parts: File) {
+    const data = new FormData()
+    data.set('registration_id', rules.id); data.set('fleet_id', 'RG-DEMO-12'); data.set('mode', 'simulation')
+    data.set('computers_file', assets); data.set('components_file', parts)
+    return api<Batch>('/imports/preview', { method: 'POST', headers: mutationHeaders(), body: data })
+  }
+  async function prepareDemo() {
+    await action('Preparing and validating the synthetic demo preview…', async () => {
+      setBatch(null)
+      const rules = registration ?? await api<Registration>('/fixture-registrations', jsonMutation({ fixture_id: 'revivegraph-synthetic-v1' }))
+      setRegistration(rules)
+      const [assets, parts] = await bundledFiles()
+      setComputers(assets); setComponents(parts)
+      setBatch(await previewFiles(rules, assets, parts)); key.current = crypto.randomUUID()
     })
   }
   async function preview() {
     if (!registration || !computers || !components) return
     await action('Validating both CSV files…', async () => {
-      const data = new FormData()
-      data.set('registration_id', registration.id); data.set('fleet_id', 'RG-DEMO-12'); data.set('mode', 'simulation')
-      data.set('computers_file', computers); data.set('components_file', components)
-      setBatch(await api<Batch>('/imports/preview', { method: 'POST', headers: mutationHeaders(), body: data })); key.current = crypto.randomUUID()
+      setBatch(await previewFiles(registration, computers, components)); key.current = crypto.randomUUID()
     })
   }
   async function commit() {
@@ -62,6 +79,7 @@ export function ImportDialog({ open, onOpenChange, onImported }: { open: boolean
     <Dialog.Portal><Dialog.Overlay className="dialog-overlay" /><Dialog.Content className="dialog-content">
       <div className="dialog-heading"><div><span className="eyebrow">BULK CSV IMPORT · SIMULATION</span><Dialog.Title>Review before inventory changes</Dialog.Title></div><Dialog.Close asChild><Button variant="ghost" aria-label="Close import dialog" disabled={!!busy}>✕</Button></Dialog.Close></div>
       <Dialog.Description className="muted">Register versioned rules, preview both files, then commit the reviewed batch. Preview writes no inventory.</Dialog.Description>
+      <Panel className="demo-import-guide" aria-label="Guided synthetic demo"><span className="demo-import-symbol"><Icon name="play" size={24} /></span><div><strong>Start with the 12-computer demo</strong><p>Use the disclosed synthetic fleet and 31 component records. No broken computers are needed. This prepares a preview; you decide whether to import it.</p><Button disabled={!!busy} onClick={prepareDemo}><Icon name="clipboard" size={16} />Prepare demo preview</Button></div></Panel>
       <Panel className="import-step"><div className="step-heading"><strong>01 · Register the fixture</strong>{registration && <Badge tone="success">Registered · v{registration.version}</Badge>}</div>
         {registration ? <><p>{registration.profile_count} toy board profiles and operation assumptions are pinned.</p><details><summary>Content hashes</summary><dl>{Object.entries(registration.file_hashes).map(([name, hash]) => <div key={name}><dt>{name}</dt><dd className="hash">{hash}</dd></div>)}</dl><p className="caption">scenarios.json is preparation evidence only. No handwritten allocation is served as a solver result.</p></details></> : <><p className="muted">Use the disclosed synthetic-v1 profiles, manifest and resource assumptions.</p><Button variant="secondary" onClick={register} disabled={!!busy}>Register synthetic-v1</Button></>}
       </Panel>

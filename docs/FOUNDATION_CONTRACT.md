@@ -1,5 +1,7 @@
 # Implemented foundation contract — 0.1.0
 
+**Current extension, 20 October 2026:** this file preserves the original intake/inspection contract. [RECOVERY_CONTRACT.md](RECOVERY_CONTRACT.md) supersedes its historical statements that planning/execution routes are absent, adds schema 2 and actual recovery APIs, and explains their simulation-only scope. CSV v1 and fixture registration/evidence contracts below remain unchanged.
+
 Status: disclosed pre-event code, 16 October 2026. This is the implemented subset of [ARCHITECTURE.md](ARCHITECTURE.md), covering fixture registration → two-file preview → transactional import → inventory → deterministic inspection. Planning, allocation, scenario overlays, approvals, work orders and repair verification have no implemented endpoints. The independent preparation oracle remains in `scripts/validate_synthetic_fixture.py` and is not imported by the application.
 
 ## Runtime and persistence

@@ -1,0 +1,14 @@
+import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import type { Plan } from '../types'
+
+const cash = (paise: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(paise / 100)
+
+export default function DashboardCharts({ plan, parent }: { plan: Plan; parent?: Plan }) {
+  const rows = [
+    ...(parent ? [{ label: 'Before failure', totals: parent.result.totals, color: '#a17bee' }] : []),
+    { label: plan.parent_plan_id ? 'Revised solver' : 'CP-SAT solver', totals: plan.result.totals, color: '#5a96ff' },
+    ...(plan.result.baseline?.totals ? [{ label: 'Greedy baseline', totals: plan.result.baseline.totals, color: '#35cf87' }] : []),
+  ]
+  const chart = rows.map(row => ({ name: row.label, usable: row.totals.usable_final, color: row.color }))
+  return <div className="overview-chart-content"><div className="overview-chart-legend">{rows.map(row => <span key={row.label}><i style={{ background: row.color }} />{row.label}</span>)}</div><div className="overview-chart" aria-label="Usable final computers by actual planning result"><ResponsiveContainer width="100%" height="100%"><BarChart data={chart} margin={{ top: 12, right: 8, bottom: 2, left: -24 }} barSize={34}><CartesianGrid stroke="#20313e" strokeDasharray="0" vertical={false} /><XAxis dataKey="name" tick={{ fill: '#9aabba', fontSize: 10 }} axisLine={{ stroke: '#2a3a47' }} tickLine={false} /><YAxis allowDecimals={false} tick={{ fill: '#9aabba', fontSize: 10 }} axisLine={false} tickLine={false} /><Tooltip cursor={{ fill: '#ffffff05' }} contentStyle={{ background: '#0b1722', border: '1px solid #2a3d4c', borderRadius: 6, fontSize: 12 }} formatter={value => [value, 'Usable final computers']} /><Bar dataKey="usable" fill="#5a96ff" radius={[3, 3, 0, 0]} isAnimationActive={false}>{chart.map(row => <Cell key={row.name} fill={row.color} />)}</Bar></BarChart></ResponsiveContainer></div><div className="overview-comparison-values">{rows.map(row => <div key={row.label}><span><i style={{ background: row.color }} />{row.label}</span><strong>{row.totals.usable_final} <small>usable</small></strong><p>{cash(row.totals.cost_paise)} · {row.totals.technician_minutes} min</p></div>)}</div><details className="overview-chart-table"><summary>View exact comparison values</summary><div className="table-scroll"><table><caption className="sr-only">Actual plan and baseline totals; no historical or predicted values</caption><thead><tr><th>Result</th><th>Usable</th><th>Paise</th><th>Minutes</th><th>Transfers</th></tr></thead><tbody>{rows.map(row => <tr key={row.label}><td>{row.label}</td><td>{row.totals.usable_final}</td><td>{row.totals.cost_paise}</td><td>{row.totals.technician_minutes}</td><td>{row.totals.transfers}</td></tr>)}</tbody></table></div></details></div>
+}

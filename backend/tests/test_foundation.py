@@ -240,7 +240,7 @@ def test_rule_failures_dominate_unknown_fields_and_ownership(context):
 def test_preparation_allocations_are_not_served(context):
     _, client, _ = context
     assert client.get("/api/v1/bundled-fixture/scenarios.json").status_code == 404
-    assert client.get("/api/v1/plans").status_code == 404
+    assert client.get("/api/v1/plans").json() == {"items": []}
     assert client.get("/api/v1/state").json()["optimization"]["status"] == "Not calculated"
 
 

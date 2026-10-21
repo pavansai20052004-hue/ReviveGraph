@@ -2,6 +2,8 @@ import sqlite3
 from contextlib import contextmanager
 from pathlib import Path
 
+from .recovery_schema import SCHEMA as RECOVERY_SCHEMA
+
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS registrations (
@@ -56,10 +58,12 @@ class Database:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         with self.connect() as connection:
             version = connection.execute("PRAGMA user_version").fetchone()[0]
-            if version not in (0, 1):
-                raise RuntimeError(f"Unsupported database schema {version}; this foundation supports 1")
-            connection.executescript(SCHEMA)
-            connection.execute("PRAGMA user_version = 1")
+            if version not in (0, 1, 2):
+                raise RuntimeError(f"Unsupported database schema {version}; supported versions are 1 and 2")
+            # executescript otherwise commits an open transaction implicitly. Keep
+            # the whole additive migration and its version pin in one script.
+            connection.executescript("BEGIN IMMEDIATE;\n" + SCHEMA + RECOVERY_SCHEMA +
+                                     "\nPRAGMA user_version = 2;\nCOMMIT;")
 
     @contextmanager
     def connect(self):

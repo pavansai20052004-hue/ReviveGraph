@@ -1,6 +1,6 @@
 # Product specification
 
-Status: full product specification with a disclosed foundation, 16 October 2026. The implemented subset covers registration, CSV preview/import, inventory/evidence inspection and deterministic compatibility; see [FOUNDATION_CONTRACT.md](FOUNDATION_CONTRACT.md). The full end-to-end flow and acceptance criteria below remain planned, with optimization, replanning and approval integration reserved for onsite work. Hardware and state definitions in [ARCHITECTURE.md](ARCHITECTURE.md) govern every screen and API.
+Status updated **20 October 2026**: the participant authorized advancing the core as disclosed preparation. The local synthetic import → compute → fail/replan → approve → work → simulated verification/report flow is implemented. [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md) records all 18 current statuses; [RECOVERY_CONTRACT.md](RECOVERY_CONTRACT.md) records actual APIs and safe limits. Acceptance criteria below define product intent; they do not imply complete physical/AI capability or change the dated earlier disclosure.
 
 ## Purpose, users and success condition
 
@@ -12,7 +12,7 @@ The core demonstration succeeds when the planned 12-machine synthetic import pro
 
 P0 = core onsite demonstration. P1 = enhancement after the reliable core; neither category implies completion. Capabilities share six main screens rather than requiring eighteen routes.
 
-| # | Capability | Workflow / priority | Testable acceptance criterion (future) |
+| # | Capability | Workflow / priority | Testable product acceptance criterion |
 | --- | --- | --- | --- |
 | 1 | Dashboard | Overview; P0 | Show fleet size, eligible stock, planned recoveries, simulated passes and physical passes separately; empty data shows no invented totals. |
 | 2 | Computer Inventory | Intake; P0 | List assets with base health, motherboard profile and installed components; opening an asset exposes provenance and blockers. |
@@ -56,4 +56,4 @@ P1 additions include live AI integration, agent orchestration, sourced environme
 
 Assume institution-owned desktop stock with permitted transfers within one owner, fixed serviceable base assemblies for recovery targets, synthetic cost/time inputs and a single technician-minute pool. Default useful configuration: at least 8 GiB RAM and one storage device of at least 240 GB (decimal), subject to board limits. These are demo policy choices, not universal minimums.
 
-Synthetic CSV rows, toy board profiles and cost/time assumptions are now pinned in [fixture v1](FIXTURE_SPEC.md), with preparation-only validation. The AI provider/model, optional impact factors and availability of any real machines remain undecided. The [Figma design](https://www.figma.com/design/Z3UwUmtqAq7HsMWLeYgcpV) contains **illustrative** counts, component IDs and resource values for layout/prototype purposes; it is not a solver result and has not been reconciled to the fixture. Acceptance criteria in this file are planned application checks, not passed application tests.
+Synthetic CSV rows, toy board profiles and cost/time assumptions are pinned in [fixture v1](FIXTURE_SPEC.md); its original preparation oracle remains separate from the implemented application's solver/lifecycle tests. The AI provider/model, optional impact factors and availability of any real machines remain undecided. The [Figma design](https://www.figma.com/design/Z3UwUmtqAq7HsMWLeYgcpV) contains **illustrative** counts, component IDs and resource values for layout/prototype purposes; it is not a solver result and has not been reconciled to actual computation. These acceptance criteria define the full product; only the supported subset recorded in IMPLEMENTATION_STATUS has implementation/test evidence.

@@ -1,12 +1,12 @@
 # Proposed architecture
 
-Status: architecture plus disclosed foundation, 16 October 2026. Registration/import, SQLite inventory/evidence and deterministic compatibility inspection are implemented as recorded in [FOUNDATION_CONTRACT.md](FOUNDATION_CONTRACT.md). Contracts below remain the full product targets; optimizer, scenarios, approvals, work orders, verification and AI endpoints are not implemented.
+Status updated **20 October 2026**: registration/import, inspection, CP-SAT allocation, persisted simulation failure/replanning, approval/reservations, simulation work/verification and JSON reporting are implemented as disclosed preparation. [RECOVERY_CONTRACT.md](RECOVERY_CONTRACT.md) is authoritative for actual schema 2 and local endpoints; [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md) records all 18 statuses. The broader contracts below remain product targets wherever they exceed that subset. AI, physical evidence review/execution and automatic reconciliation of started work are unimplemented.
 
 ## Boundaries and architecture choice
 
 React/TypeScript/Vite renders six screens using Tailwind CSS, shadcn/ui, React Flow and Recharts. FastAPI owns validation, compatibility, evidence, optimization, approval and audit. SQLite stores inventory and immutable planning history. A Python OR-Tools CP-SAT module consumes a normalized snapshot. An optional provider adapter interprets logs and explains service results.
 
-Choose a **modular monolith** with one local backend process over separate optimization/agent services: it keeps transactions and a solo 24-hour build manageable. Separate services would help long-running or multi-tenant workloads but add deployment and consistency work without helping the constrained fleet. Run the bounded solver outside the HTTP event loop; return a run ID for polling. Never hold a database write transaction during solving. Persistence plus explicit recovery handles interrupted runs; no external queue is required for the first demo.
+Choose a **modular monolith** with one local backend process over separate optimization/agent services: it keeps transactions and a solo build manageable. Separate services would help long-running or multi-tenant workloads but add deployment and consistency work without helping the constrained fleet. The implemented local solver runs synchronously in a FastAPI worker thread outside write transactions, with bounded search and a 120-second frontend request timeout. Durable asynchronous run IDs/polling below remain an enhancement; this explicit contract change avoids an unnecessary job queue for the constrained demo. A snapshot/approval race is checked again before result persistence. Retries reuse persisted logical results; a crash before persistence requires recalculation.
 
 ## Hardware and evidence contract
 

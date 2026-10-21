@@ -1,0 +1,68 @@
+.recovery-action-banner { display: flex; align-items: center; gap: 14px; padding: 16px; background: #0c202e; border-color: #234761; }
+.recovery-action-icon { width: 42px; height: 42px; border-radius: 8px; background: #4d8ff317; color: #75aafa; display: grid; place-items: center; flex-shrink: 0; }
+.recovery-action-banner > div { flex: 1; min-width: 0; }
+.recovery-action-banner h2 { font-size: 17px; line-height: 24px; margin: 4px 0; }
+.recovery-action-banner p { font-size: 11px; line-height: 18px; color: var(--muted-foreground); max-width: 760px; }
+.recovery-action-banner > button { flex-shrink: 0; }
+.recovery-action-caution { border-color: #7a5c2b; background: #221e17; }
+.recovery-action-caution .recovery-action-icon { color: var(--warning); background: #f1b94417; }
+.resource-headroom { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.resource-headroom > div { padding: 12px; display: grid; gap: 4px; border: 1px solid var(--border); border-radius: 5px; }
+.resource-headroom span,.resource-headroom small { color: var(--muted-foreground); font-size: 11px; }
+.resource-headroom strong { color: #b5dfcc; font-size: 16px; font-weight: 500; }
+.resource-track { height: 4px; background: #223544; border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.resource-track > i { display: block; height: 100%; background: #4d8ff3; border-radius: inherit; }
+.allocation-deltas { display: flex; flex-wrap: wrap; gap: 8px; }
+.allocation-deltas > span { display: flex; gap: 7px; align-items: baseline; padding: 8px 10px; background: #101f2b; border: 1px solid var(--border); border-radius: 5px; font-size: 11px; color: var(--muted-foreground); }
+.allocation-deltas strong { color: var(--foreground); font-size: 13px; font-weight: 500; }
+.allocation-comparison .allocation-diff { gap: 8px; }
+.allocation-comparison .allocation-diff li { border: 1px solid var(--border); border-radius: 5px; padding: 12px; background: #0a1721; }
+.allocation-comparison .allocation-diff li.allocation-changed { border-left: 2px solid #f1b944; }
+.allocation-comparison .allocation-diff strong { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+.allocation-comparison .allocation-diff code { display: inline-block; padding: 2px 4px; margin: 2px 3px 2px 0; font-size: 11px; color: #a9becf; }
+.allocation-comparison .allocation-diff .removed-component { color: #f3a0a4; background: #f0525815; border-radius: 3px; }
+.allocation-comparison .allocation-diff .added-component { color: #78dfac; background: #31d58a15; border-radius: 3px; }
+.work-queue-summary { background: #102330; border: 1px solid #26465c; border-radius: 6px; padding: 14px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.work-queue-summary > div { display: flex; gap: 10px; align-items: center; flex: 1; min-width: 160px; }
+.work-queue-summary > div > svg { color: #76a9f7; flex-shrink: 0; }
+.work-queue-summary > div > span { display: grid; gap: 3px; }
+.work-queue-summary strong { font-weight: 500; font-size: 13px; }
+.work-queue-summary small { font-size: 11px; }
+.work-queue-summary > p { flex-basis: 100%; border-top: 1px solid #274154; padding-top: 10px; }
+.work-queue-summary > p > strong { font-size: 11px; color: #d5e9fb; }
+.work-queue-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.work-queue-controls > div { display: flex; gap: 4px; flex-wrap: wrap; flex: 1; }
+.work-queue-controls button { border: 1px solid var(--border); background: #0a1722; color: var(--muted-foreground); font-size: 11px; min-height: 36px; border-radius: 4px; padding: 7px 10px; }
+.work-queue-controls button.active { color: #a9cbff; background: #16304c; border-color: #30587e; }
+.work-queue-controls label { flex: 0 1 220px; }
+.work-order > summary { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; list-style: none; }
+.work-order > summary::before { content: '›'; color: #7b95a8; font-size: 18px; }
+.work-order[open] > summary::before { transform: rotate(90deg); }
+.work-order > summary > span:first-of-type { flex: 1; }
+.work-order-progress { font-size: 10px; color: #829aaf; }
+.work-order .order-step { scroll-margin: 28px; outline-offset: 6px; }
+.focused-work-step { border-top-color: #5d9fff; box-shadow: -2px 0 0 #5d9fff; padding-left: 12px; background: #4d8ff307; }
+.named-dependency { display: block; margin-top: 4px; }
+.named-dependency button { font-size: 11px; line-height: 17px; }
+.saved-step-evidence { display: flex; gap: 7px; align-items: flex-start; color: #79c49c; font-size: 11px; line-height: 17px; }
+.saved-step-evidence svg { flex-shrink: 0; margin-top: 1px; }
+.queue-empty { padding: 20px 12px; color: var(--muted-foreground); border: 1px dashed var(--border); border-radius: 5px; text-align: center; font-size: 12px; }
+.secondary-failure-controls { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 8px 0; }
+.secondary-failure-controls > summary { font-size: 12px; color: #9ab6ca; }
+.secondary-failure-controls .stack { padding-top: 10px; }
+@media(max-width: 900px) { .recovery-action-banner { flex-wrap: wrap; }.recovery-action-banner > button { margin-left: 56px; }.work-queue-controls label { flex: 1 1 100%; } }
+@media(max-width: 600px) {
+ .recovery-action-banner { padding: 14px; gap: 10px; align-items: flex-start; }
+ .recovery-action-icon { width: 32px; height: 32px; }
+ .recovery-action-banner h2 { font-size: 16px; line-height: 22px; }
+ .recovery-action-banner p { font-size: 11px; line-height: 18px; }
+ .recovery-action-banner > button { margin-left: 0; width: 100%; min-height: 44px; }
+ .resource-headroom { gap: 8px; }.resource-headroom > div { padding: 10px; }.resource-headroom strong { font-size: 15px; }
+ .work-queue-summary { padding: 12px; }.work-queue-summary > button { width: 100%; min-height: 44px; }
+ .work-queue-controls > div { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }.work-queue-controls button { min-height: 44px; }
+ .allocation-comparison .allocation-diff code { font-size: 10px; }.allocation-deltas > span { flex: 1 1 100%; justify-content: space-between; }
+ .work-order-progress { font-size: 11px; }.named-dependency button { min-height: 32px; }
+}
+@media(prefers-reduced-motion:reduce) { .work-order .order-step { scroll-behavior: auto; } }
+
+@media(max-width:1200px) { .simulation-workspace.has-work-orders > .constraints-panel { order: 2; } }
