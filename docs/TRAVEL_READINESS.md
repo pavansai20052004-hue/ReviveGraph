@@ -63,3 +63,8 @@ The freeze contains the implemented synthetic import, deterministic inspection, 
 **Reserved onsite:** recover/reconcile from actual started-work scenario locations after failure, reconcile reservations/dependencies, require renewed approval of the changed plan, resume safely, and add focused correctness/concurrency/restart tests for that new behavior. Current safe pause and its existing tests are disclosed pre-event work. No new recovery/resume or renewed-approval implementation/tests were added for travel.
 
 Physical assessments/repairs, live AI, authentication and environmental estimates retain their documented limitations. Fetch scheduling overlap is unresolved; exact hours remain unconfirmed.
+
+
+## Superseding validation - 22 October 2026
+
+The initial manual rehearsal above remains separate and incomplete; read-only inspection found three completed steps and no verification. A new isolated automated browser rehearsal completed all 12 stages, 28/28 steps, seven simulated passes and zero physical repairs, including both-service restart under scoped network restrictions. Normal/manual databases and earlier backup files are unchanged. See FINAL_REHEARSAL_2026_10_22.md for actual results, offline limitations, new evidence location and the short manual repeat script. No application feature or dependency changed.

@@ -130,3 +130,6 @@ The [official event rules](https://hackyard.org/build2026/rules) were checked on
 
 
 **Travel feature freeze - 21 October 2026:** development is frozen. See [travel readiness and manual synthetic rehearsal](docs/TRAVEL_READINESS.md) for the separate rehearsal database/address, installed-dependency offline startup evidence and restore limits. Post-start recovery/reconciliation, renewed approval and their new tests are reserved for onsite work. The new source archive requires dependency installation; it is not an offline bundle.
+
+
+**Final travel rehearsal - 22 October 2026:** the complete automated browser simulation passed all 12 requested stages under scoped external-network restrictions, including both-service restart, saved-evidence restoration and audit download. It recorded 28/28 automated steps and seven authored simulated passes, with zero physical repairs. Your separate manual run remains incomplete at three saved steps and was not modified. See [actual results, offline limits and repeatable click script](docs/FINAL_REHEARSAL_2026_10_22.md). Feature development stays paused until the event; post-start reconciliation and renewed approval remain onsite work.
