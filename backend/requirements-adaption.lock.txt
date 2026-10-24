@@ -1,0 +1,5 @@
+# Optional Adaption SDK; core dependency pins preserved. Resolved 24 October 2026.
+-r requirements.lock.txt
+adaption==0.15.0
+distro==1.9.0
+sniffio==1.3.1

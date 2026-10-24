@@ -84,3 +84,34 @@ Use the dashboard next action to start the synthetic import, then Prepare demo p
 Feature development is frozen for travel preparation. The complete existing implementation is disclosed pre-event work. Travel work is limited to an isolated manual synthetic rehearsal, installed-dependency/offline startup checks, documentation and a new local source checkpoint/archive. See TRAVEL_READINESS.md.
 
 Reserve post-start recovery/reconciliation, reservation/dependency reconciliation, renewed approval and safe resume, plus their new correctness/concurrency/restart tests, for onsite implementation. Existing post-start safe pause and its tests remain part of the disclosed starting snapshot. No new feature or resumed-recovery test is part of this freeze. Exact Fetch hours remain unconfirmed.
+
+## Onsite continuation — 24 October 2026
+
+The participant resumed building from the disclosed checkpoint. The first
+integration slice now has source and focused validation for Nodus CPU execution,
+the four-stage calculation pipeline, Render task registration/hosted trigger and
+grounded Agent37 fact selection. Local execution remains usable; hosted results
+must pass the same independent allocation and accounting checks before being
+saved. See ONSITE_WORK.md for actual checks and remaining account gates.
+
+Next gates: activate Nodus event credits/source-output entitlement and run one
+authorized <=US$0.10 calculation; identify/create and review a dedicated Agent37
+instance, agree its spending bound and verify one real explanation; review and
+authorize a Render deployment, configure its actual task slug and run the hosted
+chain. No live provider result, cloud usage or deployed workflow is claimed yet.
+
+Post-start reconciliation, renewed approval and safe resume remain a separate
+unimplemented onsite slice. Existing safe pause is preserved; the integrations
+cannot bypass it. Physical assessment/verification and production authentication
+also remain incomplete. Fetch scheduling overlap is still unresolved; exact
+Fetch hours have not been confirmed.
+
+The subsequent 60-minute Adaption slice produced a versioned 16-example
+synthetic selection dataset, one real adaptation run and its downloaded/evaluated
+artifact. All 12 training examples were accepted after bounded format checks;
+the four held-out examples were not uploaded. Optional Agent37 reference loading
+and unavailable-artifact fallback passed focused checks. Before claiming improved
+assistant behavior, separately obtain approved before/after held-out Agent37
+predictions and compare exact selection accuracy and unsupported-ID rate. Do not
+substitute Adaption's dataset scores for this application evaluation. No further
+paid run, core feature expansion or live Agent37 call is part of this timebox.

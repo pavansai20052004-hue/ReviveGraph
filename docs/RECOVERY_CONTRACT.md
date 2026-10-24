@@ -60,3 +60,28 @@ Implementation references: [CP-SAT integer/status semantics](https://developers.
 ## Read-only audit feed and Reports interface — 20 October 2026
 
 `GET /api/v1/audit-events` now exposes real fleet-scoped audit history for Dashboard/Reports. Parameters are `fleet_id` (default RG-DEMO-12), nonnegative `offset`, `limit` 1–200 (default 50), and optional exact `action` (max 100 characters). Response includes decoded `items`, `total`, `offset` and `limit`, ordered by descending event ID. Related batches, assets, components, plans, orders, failures and verifications establish scope through parameterized relational queries. Shared registrations are excluded to avoid cross-fleet event exposure. Reads do not create audit or inventory writes. The Reports UI selects existing plans, reads the existing report contract, filters/paginates actual events and downloads the real JSON report. The underlying allocation, approval, reservation and execution contracts remain unchanged.
+
+
+## Onsite execution and explanation additions — 24 October 2026
+
+`POST /api/v1/plans` now accepts optional `execution: local|nodus` and
+`orchestration: local|render`, both defaulting to local. The request remains the
+same integer-budget/minute, simulation-only contract. Every execution completes
+input validation, execution, result validation and audit generation. Cloud
+providers are explicit opt-ins; no silent local fallback is allowed. The
+existing authoritative lifecycle still rebuilds/rechecks its snapshot,
+reservations and revision before persistence. No database schema migration or
+fixture modification was required.
+
+Plan `execution` metadata records the actual CPU provider separately from its
+`workflow.orchestrator`, task/job IDs where supplied, trace hashes and audit
+artifact. Missing pre-event metadata remains missing; it is not retroactively
+invented. Failure replanning inherits both choices from its parent. Caps are
+per Nodus job; Render orchestration is billed separately. Account availability
+does not establish activation, credits or a successful run.
+
+Read-only assistant context and explicit local/Agent37 explanation routes are
+specified in ASSISTANT_INTEGRATION.md. Explanations append audit records but
+cannot approve, mutate hardware assertions or complete work. All old physical
+and post-start reconciliation boundaries above still apply. Live provider
+success remains unverified; see ONSITE_WORK.md for actual checks.

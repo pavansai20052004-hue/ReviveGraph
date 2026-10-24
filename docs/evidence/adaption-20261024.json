@@ -1,0 +1,121 @@
+{
+  "event_date": "2026-10-24",
+  "synthetic": true,
+  "provider": "Adaption",
+  "sdk_version": "0.15.0",
+  "task_timebox": {
+    "started_utc": "2026-10-24T13:32:44Z",
+    "deadline_utc": "2026-10-24T14:32:44Z",
+    "completed_utc": "2026-10-24T14:27:35.816473+00:00",
+    "elapsed_minutes": 54.86,
+    "completed_within_60_minutes": true
+  },
+  "dataset_id": "02f181dc-af5e-41f4-8537-439de55fb813",
+  "run_id": "dataset-02f181dc-af5e-41f4-8537-439de55fb813-1792850855309",
+  "run_status": "succeeded",
+  "dataset_hash": "472c72a7897c913b905274f6ab046515a63a620094665631851362ba3535c121",
+  "train_file_hash": "8f2e6c6cd6afe5838f112c6836efe6a5d17f66e389321636a881526884008a60",
+  "training_rows": 12,
+  "heldout_rows_not_uploaded": 4,
+  "configuration_hash": "5a68ee4b897acb53af7df3966162bf503bc8cbff9cfb142886ed5d9148f8907c",
+  "estimate": {
+    "estimate_only": true,
+    "estimated_credits_consumed": 1.0,
+    "estimated_minutes": 11.0,
+    "recorded_at": "2026-10-24T14:01:15+00:00"
+  },
+  "launch_estimate": {
+    "estimate_only": true,
+    "estimated_credits_consumed": 1.0,
+    "estimated_minutes": 11.0,
+    "recorded_at": "2026-10-24T14:07:31+00:00"
+  },
+  "authorization": "Participant explicitly approved one adaptation run with a refreshed estimate at most 1 credit; not a provider hard billing cap.",
+  "paid_launches": 1,
+  "actual_credits_consumed": null,
+  "timestamps": {
+    "created_at": "2026-10-24T13:56:39+00:00",
+    "dataset_created_at": "2026-10-24T13:56:55+00:00",
+    "uploaded_at": "2026-10-24T13:57:24+00:00",
+    "started_at": "2026-10-24T14:07:36+00:00",
+    "completed_at": "2026-10-24T14:14:57+00:00",
+    "downloaded_at": "2026-10-24T14:12:40+00:00",
+    "last_polled_at": "2026-10-24T14:14:55+00:00"
+  },
+  "evaluation": {
+    "quality": {
+      "grade_after": "B",
+      "grade_before": "D",
+      "improvement_percent": 115.0,
+      "percentile_after": 31.5,
+      "score_after": 8.6,
+      "score_before": 4.0
+    },
+    "retrieved_at": "2026-10-24T14:15:00+00:00",
+    "scope": "Adaption-reported dataset quality; not ReviveGraph held-out accuracy, solver improvement or hardware verification.",
+    "status": "succeeded"
+  },
+  "evaluation_summary": {
+    "grade_after": "B",
+    "grade_before": "D",
+    "improvement_percent": 115.0,
+    "score_after": 8.6,
+    "score_before": 4.0
+  },
+  "download_hash": "e854f0fa5418a8ebbcc1f0575d332872716b2757e7b3016f7238dfe8a33433f4",
+  "accepted_artifact_hash": "8e85fb150d0eb244351187248b5daf6756a35a8a0a6139c2caf8c1842c3de916",
+  "accepted_rows": 12,
+  "json_fence_normalizations": 4,
+  "provider_persona_injection_used": false,
+  "runtime_opt_in_not_enabled_for_normal_app": true,
+  "runtime_check": {
+    "synthetic": true,
+    "scope": "Actual accepted Adaption artifact with isolated actual local plan; Agent37 transport mocked; no AI request or human approval.",
+    "recorded_at": "2026-10-24T14:22:14.833027+00:00",
+    "artifact": {
+      "status": "accepted",
+      "examples": 2,
+      "serialized_bytes": 16146,
+      "artifact_hash": "8e85fb150d0eb244351187248b5daf6756a35a8a0a6139c2caf8c1842c3de916",
+      "dataset_id": "02f181dc-af5e-41f4-8537-439de55fb813",
+      "run_id": "dataset-02f181dc-af5e-41f4-8537-439de55fb813-1792850855309"
+    },
+    "selected_fact_ids": [
+      "inspection:RG-PC-06:RG-RAM-11",
+      "simulation-boundary"
+    ],
+    "physical_repairs": 0,
+    "solver_totals": {
+      "cost_paise": 215000,
+      "newly_recovered": 7,
+      "technician_minutes": 299,
+      "transfers": 7,
+      "usable_final": 7
+    },
+    "solver_status": "OPTIMAL",
+    "checks_passed": true
+  },
+  "protected_files_unchanged": {
+    "datasets/synthetic-v1/board_profiles.json": true,
+    "datasets/synthetic-v1/components.csv": true,
+    "datasets/synthetic-v1/computers.csv": true,
+    "datasets/synthetic-v1/manifest.json": true,
+    "datasets/synthetic-v1/operation_costs.json": true,
+    "datasets/synthetic-v1/scenarios.json": true,
+    "backend/revivegraph/domain.py": true,
+    "backend/revivegraph/optimizer.py": true,
+    "backend/revivegraph/recovery.py": true,
+    "scripts/validate_synthetic_fixture.py": true
+  },
+  "validation": {
+    "combined_adaption_and_assistant_tests": "52 passed, 9.13 seconds; all provider calls mocked in tests",
+    "dataset_reproducibility": "16 rows; 12 train and 4 held out; exact bytes match",
+    "heldout_agent37_improvement": "unmeasured",
+    "live_agent37_call": false
+  },
+  "limitations": [
+    "Adaption quality scores are not hardware verification, solver improvement or held-out Agent37 accuracy.",
+    "Actual billing consumption was not returned by the documented dataset API.",
+    "No deterministic solver, compatibility rule, physical-health evidence or approval was changed."
+  ]
+}

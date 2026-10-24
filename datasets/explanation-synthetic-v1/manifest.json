@@ -1,0 +1,27 @@
+{
+  "version": "synthetic-explanations-v1",
+  "created_date": "2026-10-24",
+  "synthetic": true,
+  "label": "Synthetic demo — illustrative data; no physical measurements or repairs.",
+  "fixture_id": "revivegraph-synthetic-v1",
+  "fixture_version": 1,
+  "rule_version": "desktop-inspection-v1",
+  "assistant_version": "grounded-assistant-v1",
+  "train_rows": 12,
+  "holdout_rows": 4,
+  "source_files": {
+    "board_profiles.json": "980a9ae568362cc7302a7deca6b30a12db4debe06ae517e31339e23b0c715c76",
+    "components.csv": "3de43754398d2adac8f6cf5e7fdcbbe45f9c3f93fe60894d8298b6901f5652fc",
+    "computers.csv": "5728388f5e70d3be15e0564d2ada1dc838b88ae55ca8f1b526c170d8c7c548b4",
+    "manifest.json": "6f3d1aef9f4885c650d6f5a0b5d8425cb3af7a6cfb3e96c6c57aa32a2ce446f0",
+    "operation_costs.json": "505e5006fedbc9709bb2f0574b8773c269593a9e33bf1be22c37a46cf00e8f5f",
+    "scenarios.json": "caf692ac55d6eee9027ee5f23a6405cd210aac5afc79d17e09293be9036ecdba"
+  },
+  "files": {
+    "train.jsonl": "8f2e6c6cd6afe5838f112c6836efe6a5d17f66e389321636a881526884008a60",
+    "holdout.jsonl": "56f5f4f0b150e1c61dd9eaf5a7155609cd6370c77dd3968e7dc3a25333e4fde3"
+  },
+  "completion_contract": "Select canonical fact IDs; explanatory sections live in context. Generated narrative is not authoritative.",
+  "quality_improvement": "unmeasured; provider evaluation and held-out Agent37 comparison have not run",
+  "dataset_hash": "472c72a7897c913b905274f6ab046515a63a620094665631851362ba3535c121"
+}

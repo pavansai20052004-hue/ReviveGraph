@@ -22,6 +22,8 @@ class Body(BaseModel):
 
 
 class SolveBody(Body):
+    execution: Literal["local", "nodus"] = "local"
+    orchestration: Literal["local", "render"] = "local"
     fleet_id: str = "RG-DEMO-12"
     context_id: str = Field(default="demo", pattern=r"^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$")
     budget_paise: int = Field(default=250000, ge=0, le=100000000, strict=True)
@@ -191,7 +193,12 @@ def calculate(db, inventory, body, actor, key, parent=None):
         source = snapshot(c, body.fleet_id, ctx, inventory)
         c.commit()
     try:
-        result = solve(source, body.budget_paise, body.time_minutes)
+        if body.orchestration == "render":
+            from .workflow_render import calculate as execute
+        else:
+            from .workflow import calculate as execute
+        result, execution = execute(source, body.budget_paise, body.time_minutes, body.execution,
+                                    run_key=key + ":" + fp)
         checked = validate_output(source, result["allocations"], body.budget_paise, body.time_minutes)
         if checked["totals"] != result["totals"] or checked["operations"] != result["operations"]:
             raise ValueError("Solver output and independent validation differ")
@@ -204,6 +211,7 @@ def calculate(db, inventory, body, actor, key, parent=None):
             "scenario_id": f"{body.fleet_id}:{body.context_id}:{source['context_revision']}",
             "parent_plan_id": parent, "budget_paise": body.budget_paise, "time_minutes": body.time_minutes,
             "snapshot": source, "snapshot_hash": sha(dump(source)), "result": result, "output_hash": sha(dump(result)),
+            "execution": execution,
             "validation": {"valid": True, "validator": "independent-allocation-check-v1"},
             "assumptions": ["Authored synthetic assertions and toy board profiles; simulation only.",
                             "Integer INR paise; single technician effort pool in minutes; no wages added.",
@@ -228,7 +236,7 @@ def calculate(db, inventory, body, actor, key, parent=None):
                 "before_totals": before["result"]["totals"], "after_totals": result["totals"],
                 "changed_targets": [{"target_asset_id": a, "before": old.get(a), "after": new.get(a)} for a in sorted(old.keys() | new.keys()) if old.get(a) != new.get(a)]}
         c.execute("INSERT INTO recovery_plans VALUES (?,?,?,?,?,?,?,?)", (plan_id, body.fleet_id, body.context_id, source["context_revision"], source["inventory_revision"], "validated", dump(data), now()))
-        audit(c, "plan_validated", plan_id, actor, {"input_hash": data["input_hash"], "solver": result["solver"]})
+        audit(c, "plan_validated", plan_id, actor, {"input_hash": data["input_hash"], "solver": result["solver"], "execution": execution})
         response = public_plan(c, plan_id)
         remember(c, key, fp, {"id": plan_id})
         c.commit()
@@ -307,7 +315,7 @@ def install_routes(app, inventory, headers):
         return finish_failure(plan_id, key, fp, actor, data)
 
     def finish_failure(plan_id, key, fp, actor, data):
-        revised = calculate(db, inventory, SolveBody(fleet_id=data["fleet_id"], context_id=data["context_id"], budget_paise=data["budget_paise"], time_minutes=data["time_minutes"]), actor, "replan-" + sha(key), parent=plan_id)
+        revised = calculate(db, inventory, SolveBody(fleet_id=data["fleet_id"], context_id=data["context_id"], budget_paise=data["budget_paise"], time_minutes=data["time_minutes"], execution=data.get("execution", {}).get("provider", "local"), orchestration="render" if data.get("execution", {}).get("workflow", {}).get("orchestrator") == "render-workflows" else "local"), actor, "replan-" + sha(key), parent=plan_id)
         with db.connect() as c:
             c.execute("BEGIN IMMEDIATE")
             c.execute("UPDATE recovery_requests SET response=? WHERE key=? AND request_hash=?", (dump({"id": revised["id"]}), key, fp))

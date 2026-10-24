@@ -323,4 +323,6 @@ def create_app(db_path=None, fixture_root=None):
 
     from .recovery import install_routes
     install_routes(app, inventory, mutation_headers)
+    from .assistant import install_routes as assistant_routes
+    assistant_routes(app, mutation_headers)
     return app

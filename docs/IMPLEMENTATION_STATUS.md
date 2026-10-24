@@ -44,3 +44,30 @@ The actual donor SSD-10 starts in PC-09; revised SSD-11 starts in PC-11. Both ar
 Operation totals before and after: 7 prepare, 3 RAM removal, 4 storage removal, 3 RAM installation, 4 storage installation, 7 verification. Cash: `7×10000 + 3×2000 + 4×3000 + 3×5000 + 4×7000 + 7×12000 = 215000`. Effort: `7×10 + 3×5 + 4×6 + 3×8 + 4×10 + 7×18 = 299`.
 
 The automated isolated acceptance rehearsal recorded seven **authored simulation passes** after saving and reopening its temporary database; physical passes and physical inventory usability remained zero. The browser rehearsal recorded one authored simulation pass and exported JSON. Neither is technician approval or observed diagnostic evidence. The receipt under ignored `data/recovery-rehearsal-20261020.json` contains the actual run/report, not a production input.
+
+
+## Onsite integration status — 24 October 2026
+
+The table and main-fleet computation above describe the disclosed pre-event
+foundation. New onsite code now adds optional Nodus CPU execution, four-stage
+local orchestration, Render Workflows task source/hosted trigger and a grounded
+Agent37 plan assistant. This updates the integration boundary, not the history
+of who implemented the original local optimizer.
+
+- Capabilities 9/10/18: local calculations now retain stage trace and calculation
+  audit artifacts. Nodus and Render adapters are implemented and tested with
+  transport doubles; actual cloud runs remain blocked/unverified.
+- Capability 5: hardware log interpretation/AI diagnosis is still unimplemented.
+  Diagnostics additionally supports actual saved-plan explanations and explicit
+  local facts. The Agent37 transport requires a reviewed dedicated instance,
+  credentials, activation and a real validation call before live completion.
+- Capability 12: bounded read-only fact selection is implemented as the first
+  assistant slice. An autonomous mutating agent is still unimplemented. AI has
+  no approval, health-editing or work-completion authority.
+- Capability 13 and execution: pre-work replanning and existing post-start safe
+  pause remain. Reconciliation, renewed approval and safe resume remain absent.
+
+All 18 capabilities remain in PRODUCT_SPEC. Physical repair counts remain zero.
+No cloud usage, completed hardware repairs or environmental savings are inferred.
+See ONSITE_WORK.md and the integration documents for executed checks and account
+blockers.

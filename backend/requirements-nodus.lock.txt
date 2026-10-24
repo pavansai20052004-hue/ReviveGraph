@@ -1,0 +1,9 @@
+# Optional Nodus SDK add-on; install alongside requirements.lock.txt.
+-r requirements.lock.txt
+nodus-compute==1.0.27
+cloudpickle==3.1.2
+pathspec==1.1.1
+python-dotenv==1.2.4
+PyYAML==6.0.3
+synchronicity==0.12.6
+websockets==17.3

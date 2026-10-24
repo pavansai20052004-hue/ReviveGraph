@@ -1,0 +1,18 @@
+{
+  "services": [
+    {
+      "type": "workflow",
+      "name": "revivegraph-recovery-workflow",
+      "runtime": "python",
+      "region": "singapore",
+      "buildCommand": "python -m pip install --disable-pip-version-check -r backend/requirements-render.lock.txt -r backend/requirements-nodus.lock.txt",
+      "startCommand": "python workflows/main.py",
+      "autoDeployTrigger": "off",
+      "envVars": [
+        {"key": "PYTHON_VERSION", "value": "3.14.7"},
+        {"key": "PYTHONUNBUFFERED", "value": "1"},
+        {"key": "REVIVEGRAPH_NODUS_ENABLED", "value": "0"}
+      ]
+    }
+  ]
+}

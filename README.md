@@ -133,3 +133,35 @@ The [official event rules](https://hackyard.org/build2026/rules) were checked on
 
 
 **Final travel rehearsal - 22 October 2026:** the complete automated browser simulation passed all 12 requested stages under scoped external-network restrictions, including both-service restart, saved-evidence restoration and audit download. It recorded 28/28 automated steps and seven authored simulated passes, with zero physical repairs. Your separate manual run remains incomplete at three saved steps and was not modified. See [actual results, offline limits and repeatable click script](docs/FINAL_REHEARSAL_2026_10_22.md). Feature development stays paused until the event; post-start reconciliation and renewed approval remain onsite work.
+
+
+**Onsite continuation — 24 October 2026:** the participant explicitly resumed development after the official build started. New code adds an opt-in Nodus CPU adapter, a four-stage validated calculation pipeline, optional hosted Render Workflows orchestration, and a grounded Agent37 plan assistant in Diagnostics. Local CPU and local orchestration remain the defaults. The assistant's explicit local evidence summary works without an AI call. See [Nodus setup](docs/NODUS_INTEGRATION.md), [assistant setup and boundaries](docs/ASSISTANT_INTEGRATION.md), [workflow setup](docs/WORKFLOWS_INTEGRATION.md) and the separate [onsite work record](ONSITE_WORK.md) for actual checks. Live Nodus/Agent37 runs are blocked by account activation; Render has not been deployed. Provider mocks and SDK tests are not cloud success. Earlier freeze/status statements above describe the preserved pre-event snapshot.
+
+The isolated onsite preview is available at `http://127.0.0.1:15274` while its
+local processes run, with backend `http://127.0.0.1:18274` and a separate ignored
+`data/onsite-preview-20261024.sqlite3`. It starts empty so you can explicitly
+import the fixture yourself; your normal database and past rehearsals are kept.
+To restart this workspace, use two PowerShell terminals from the repository:
+
+```powershell
+$env:REVIVEGRAPH_DB = Join-Path $PWD 'data\onsite-preview-20261024.sqlite3'
+.\.venv\Scripts\python.exe -m uvicorn revivegraph.main:create_app --factory --app-dir backend --host 127.0.0.1 --port 18274
+```
+
+```powershell
+$env:REVIVEGRAPH_API_TARGET = 'http://127.0.0.1:18274'
+npm --prefix frontend run dev -- --port 15274 --strictPort
+```
+
+**Adaption increment — 24 October 2026:** a separate synthetic explanation
+dataset now has 12 training examples and four held-out examples, reproducible
+fixture/rule hashes and a separately pinned official SDK. One real, explicitly
+authorized Adaption run succeeded after a one-credit estimate. Its reported
+dataset score changed from 4.0 to 8.6 (D to B); this is not a measured Agent37
+answer improvement. All 12 adapted selections passed exact source-answer checks.
+Optional bounded reference examples can be enabled for Agent37; canonical
+current-plan facts and deterministic solver decisions remain authoritative.
+Missing/invalid artifacts fall back to the existing behavior. No live Agent37
+call or normal-database change was made. See [commands, safety boundaries and
+limitations](docs/ADAPTION_INTEGRATION.md), [sanitized actual-run evidence](docs/evidence/adaption-20261024.json)
+and [onsite disclosure](ONSITE_WORK.md).

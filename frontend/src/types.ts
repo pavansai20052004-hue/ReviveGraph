@@ -33,6 +33,7 @@ export type Totals = { cost_paise: number; technician_minutes: number; transfers
 export type WorkStep = { id: string; operation: string; component_id?: string; asset_id?: string; depends_on: string[]; required_checks: string[]; status: string; evidence_ref?: string; checks?: string[]; actor?: string; completed_at?: string }
 export type WorkOrder = { id: string; target_asset_id: string; status: string; steps: WorkStep[]; verification?: { outcome: string; evidence_ref: string } | null }
 export type Plan = {
+  execution?: { workflow?: { orchestrator: string; task_run_id?: string | null; stages: { stage: string; status: string; input_hash: string; output_hash: string }[]; artifact_hash: string }; provider: 'local' | 'nodus'; job_id?: string; input_hash?: string; output_hash?: string; max_cost_usd?: string };
   id: string; input_hash: string; inventory_revision: number; scenario_id: string; parent_plan_id: string | null;
   mode: string; context_id: string; status: string; budget_paise: number; time_minutes: number;
   result: { allocations: Allocation[]; operations: Operation[]; totals: Totals; solver: { status: string; objectives_proven: unknown; engine_version?: string; termination_reason?: string }; baseline?: { totals?: Totals; allocations?: Allocation[]; [key: string]: unknown } };

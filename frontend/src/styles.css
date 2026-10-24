@@ -380,3 +380,6 @@ tr.selected-row { background: #11273a; }
 .demo-import-guide p { color: #afc1d1; font-size: 12px; line-height: 20px; max-width: 560px; }
 .demo-import-guide button { justify-self: start; }
 @media(max-width:600px) { .demo-import-guide { padding: 14px; gap: 10px; }.demo-import-symbol { width: 32px; height: 32px; }.demo-import-guide strong { font-size: 14px; }.demo-import-guide p { font-size: 11px; line-height: 18px; }.demo-import-guide button { min-height: 44px; } }
+
+.assistant-panel textarea { font: inherit; width: 100%; min-height: 96px; resize: vertical; padding: 10px 12px; border: 1px solid var(--control-border); border-radius: 8px; background: var(--card); color: var(--foreground); }
+.assistant-panel .button-row { display: flex; flex-wrap: wrap; gap: 8px; }

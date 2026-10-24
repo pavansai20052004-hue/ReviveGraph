@@ -1,0 +1,3 @@
+# Optional task runtime; the core application does not import this SDK.
+-r requirements.lock.txt
+render==1.4.0
