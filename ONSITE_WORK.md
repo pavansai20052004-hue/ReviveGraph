@@ -236,3 +236,59 @@ in the normal running application. The current application works without
 Adaption. Held-out Agent37 before/after predictions and actual billing remain
 unmeasured/unavailable, respectively. Physical repairs remain zero. All earlier
 Figma work, archives, tags, fixture bytes and historical records are preserved.
+
+## 24 October 2026 — Render deployment preparation and billing stop
+
+The participant asked to leave Agent37 aside and finish Render Workflows.
+Existing source, fixture, Adaption evidence and normal database were preserved.
+The Render plugin was discovered/connected; its authenticated account exposed
+My Workspace (`tea-d69gif86fj8s73ciknig`). Its available tools lacked workflow
+creation/task triggering, so the official portable CLI 2.31.0 was downloaded
+from the official release and verified against its published SHA-256 digest.
+The participant completed the CLI browser/device authorization. No credential
+was printed or copied into project source/evidence.
+
+The prepared Blueprint passed local validation against Render's published
+schema and authenticated semantic/workspace validation. The latter returned
+valid=true and one planned workflow, `revivegraph-recovery-workflow`.
+A fresh isolated actual local calculation measured all four chained argument
+sizes at 88,786 / 89,198 / 102,490 / 102,869 bytes; final envelope 103,898 bytes.
+All fit the official 4 MB argument limit. This is a local preparation result,
+not Render execution evidence or a new physical repair result.
+
+A real native Windows `render workflows dev` probe failed with
+`GetFileAttributesEx /tmp: The system cannot find the file specified` before
+registration. WSL returned REGDB_E_CLASSNOTREG and Docker's Linux engine was
+not running. No global `/tmp` directory, SDK patch, substitute service or fake
+passing local task-server claim was introduced.
+
+The participant explicitly approved creating a PRIVATE GitHub repository,
+uploading the reviewed source, deployment in Singapore/My Workspace and ONE
+Render CPU test with a US$0.30 budget, Nodus and automatic deployment off.
+This specifically authorized overriding the earlier no-push restriction.
+The source review included 138 files (5,076,148 bytes), excluding credentials,
+databases, environments and generated runtime outputs. Exactly 47 changed
+files were inspected/staged, committed as
+`f3102aa425abd5aa6cc45e3acc097838b2694f8a` and pushed with existing local Git
+identity/history into the verified-private repository
+https://github.com/pavansai20052004-hue/ReviveGraph . Earlier tags, archives and
+checkpoint history remain intact; no public repository was created.
+
+One workflow creation attempt using the approved configuration returned HTTP
+402: payment information is required, with the account billing URL. No workflow
+or paid task was created. A subsequent CLI workflow list was empty. The
+participant then explicitly said they cannot add billing and asked to preserve
+the prepared deployment. No further creation or paid test was attempted, no
+billing details entered and no other provider was used as a substitute.
+
+Prepared settings, exact blockers and the future resume command are recorded
+in `docs/RENDER_DEPLOYMENT_STATUS.md`; sanitized status evidence is in
+`docs/evidence/render-readiness-20261024.json`. Ignored
+`data/render-readiness/` retains the reviewed source ZIP/hash/file manifest,
+CLI release/validation evidence and prepared synthetic input. The ZIP requires
+dependency installation, not an offline bundle. Runtime/card/token contents
+are excluded. No executable application code was changed during this task;
+passing prior suites were not repeated. Hosted Linux build, registered task
+inspection, remote calculation, downloaded remote validation and actual usage
+remain blocked/unverified. The private source and prepared deployment are
+preserved for a later explicit continuation after billing is available.

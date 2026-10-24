@@ -165,3 +165,11 @@ Missing/invalid artifacts fall back to the existing behavior. No live Agent37
 call or normal-database change was made. See [commands, safety boundaries and
 limitations](docs/ADAPTION_INTEGRATION.md), [sanitized actual-run evidence](docs/evidence/adaption-20261024.json)
 and [onsite disclosure](ONSITE_WORK.md).
+
+**Render deployment checkpoint — 24 October 2026:** the participant authorized
+the reviewed source upload to the private
+[ReviveGraph repository](https://github.com/pavansai20052004-hue/ReviveGraph).
+Render CLI authentication and both Blueprint validations passed, but workflow
+creation returned HTTP 402 requiring payment information. The participant cannot
+add billing now and asked to preserve the preparation. No hosted workflow or
+task run was created. See [exact status and resume commands](docs/RENDER_DEPLOYMENT_STATUS.md).

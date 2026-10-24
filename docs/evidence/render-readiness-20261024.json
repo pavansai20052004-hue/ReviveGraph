@@ -1,0 +1,109 @@
+{
+  "date": "2026-10-24",
+  "recorded_at": "2026-10-24T14:54:25.102332+00:00",
+  "status": "blocked_payment_information_required",
+  "participant_decision": "Cannot add billing now; preserve prepared deployment. No further creation or paid-run attempts.",
+  "workspace": {
+    "name": "My Workspace",
+    "id": "tea-d69gif86fj8s73ciknig"
+  },
+  "github": {
+    "id": 1432283018,
+    "full_name": "pavansai20052004-hue/ReviveGraph",
+    "private": true,
+    "html_url": "https://github.com/pavansai20052004-hue/ReviveGraph",
+    "clone_url": "https://github.com/pavansai20052004-hue/ReviveGraph.git",
+    "default_branch": "main"
+  },
+  "reviewed_source_commit": "f3102aa425abd5aa6cc45e3acc097838b2694f8a",
+  "source_review": {
+    "archive": "data\\render-readiness\\ReviveGraph-source-review-20261024T144320Z.zip",
+    "archive_sha256": "6438bb436227236aa35567febcaaf33fce4bb50fb862448c3819f0370586a71d",
+    "file_count": 138
+  },
+  "cli": {
+    "release": "v2.31.0",
+    "asset": "cli_2.31.0_windows_amd64.zip",
+    "archive_sha256": "372202426445520ba26c6ca50683dc1c6b171ff76ae9906d1f517dfd521740a0",
+    "release_digest": "sha256:372202426445520ba26c6ca50683dc1c6b171ff76ae9906d1f517dfd521740a0",
+    "release_digest_matched": true
+  },
+  "schema_validation": {
+    "valid": true,
+    "schema": "https://render.com/schema/render.yaml.json",
+    "method": "published JSON schema validated locally; not authenticated semantic validation",
+    "schema_sha256": "8a3fb8da6b4f55fe686fbefa790e011d3dd7895f013f355953c572a21ab6494a"
+  },
+  "authenticated_blueprint_validation": {
+    "plan": {
+      "totalActions": 1,
+      "workflows": [
+        "revivegraph-recovery-workflow"
+      ]
+    },
+    "valid": true
+  },
+  "local_cli_probe": {
+    "passed": false,
+    "error": "GetFileAttributesEx /tmp: The system cannot find the file specified.",
+    "wsl": "REGDB_E_CLASSNOTREG",
+    "docker": "Docker Desktop Linux engine pipe unavailable"
+  },
+  "payload_measurements": {
+    "scope": "Actual isolated local fixture calculation; not a Render task server or hosted run",
+    "child_inputs": [
+      {
+        "stage": "validate_input",
+        "input_bytes": 88786
+      },
+      {
+        "stage": "execute",
+        "input_bytes": 89198
+      },
+      {
+        "stage": "validate_result",
+        "input_bytes": 102490
+      },
+      {
+        "stage": "generate_audit",
+        "input_bytes": 102869
+      }
+    ],
+    "final_bytes": 103898,
+    "totals": {
+      "cost_paise": 215000,
+      "technician_minutes": 299,
+      "transfers": 7,
+      "usable_final": 7,
+      "newly_recovered": 7
+    },
+    "physical_repairs": 0
+  },
+  "creation_attempt": {
+    "attempts": 1,
+    "http_status": 402,
+    "message": "Payment information is required to complete this request.",
+    "billing_url": "https://dashboard.render.com/billing",
+    "workflow_created": false
+  },
+  "workflow_list_after_attempt": [],
+  "hosted_task_runs": 0,
+  "actual_render_usage": null,
+  "authorization": {
+    "private_source_upload": true,
+    "deployment": true,
+    "one_test_budget_usd": 0.3,
+    "automatic_deploy": false,
+    "nodus_enabled": false,
+    "followup": "Account billing unavailable; participant deferred hosted actions."
+  },
+  "normal_database_modified": false,
+  "application_executable_code_changed_this_task": false,
+  "remaining_unverified": [
+    "Linux dependency installation/build",
+    "Cloud task registration/retry settings",
+    "Hosted calculation and download validation",
+    "Render usage/billing"
+  ],
+  "credentials_included": false
+}

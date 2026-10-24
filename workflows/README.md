@@ -77,3 +77,20 @@ The manifest has been parsed locally and checked for the intended service fields
 No Render CLI/API schema validation, Linux build, linked Git source or hosted
 run is claimed. The official local task-server path additionally requires
 Render CLI 2.12.0 or later; the CLI was not installed during preparation.
+
+## Later onsite deployment attempt — 24 October 2026
+
+The participant authorized private source publication, deployment and one
+Render CPU test. The private repository now exists and the reviewed source is
+pushed. Official CLI 2.31.0 was authenticated and this Blueprint passed both
+published-schema and authenticated workspace validation. Workflow creation was
+then rejected with HTTP 402 requiring payment information. The participant
+cannot add billing now and requested preserving the preparation. No workflow
+or cloud task run was created; no replacement web service was deployed.
+
+The native Windows CLI-local server failed on its `/tmp` socket directory.
+WSL/Linux engine access was unavailable. These failures were not hidden by
+changing the SDK or global filesystem. See
+`docs/RENDER_DEPLOYMENT_STATUS.md` for the actual results, source identity,
+prepared resume command and remaining gates. Earlier statements in this guide
+describe the preparation state before this later authorized attempt.
