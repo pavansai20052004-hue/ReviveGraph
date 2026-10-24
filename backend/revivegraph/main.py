@@ -68,10 +68,12 @@ def inventory(connection, fleet_id):
         components.append({**json.loads(row["data"]), "location_asset_id": row["location_asset_id"],
                            "origin_asset_id": row["origin_asset_id"], "origin_location_kind": "installed" if row["origin_asset_id"] else "stock",
                            "registration_id": row["registration_id"], "batch_id": row["batch_id"],
-                           "assessment": assessments[row["assessment_id"]], "reserved": False,
+                           "assessment": assessments[row["assessment_id"]], "health": assessments[row["assessment_id"]]["health"],
+                           "evidence_ref": assessments[row["assessment_id"]]["evidence_ref"], "reserved": False,
                            "inspection_rule_version": registrations[row["registration_id"]]["inspection_rule_version"]})
     for row in connection.execute("SELECT * FROM computers WHERE fleet_id=? ORDER BY id", (fleet_id,)):
-        computer = {**json.loads(row["data"]), "assessment": assessments[row["assessment_id"]]}
+        computer = {**json.loads(row["data"]), "assessment": assessments[row["assessment_id"]],
+                    "base_health": assessments[row["assessment_id"]]["health"]}
         registration = registrations[row["registration_id"]]
         if registration.get("inspection_rule_version") != RULE_VERSION:
             raise Problem(409, "RULE_VERSION_MISMATCH", "Inventory is pinned to another inspection rule version.")
@@ -323,6 +325,8 @@ def create_app(db_path=None, fixture_root=None):
 
     from .recovery import install_routes
     install_routes(app, inventory, mutation_headers)
+    from .assessments import install_routes as assessment_routes
+    assessment_routes(app, mutation_headers)
     from .assistant import install_routes as assistant_routes
     assistant_routes(app, mutation_headers)
     return app

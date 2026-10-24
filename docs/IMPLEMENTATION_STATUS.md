@@ -1,3 +1,8 @@
+> **Current status: 25 October 2026.** See [LOCAL_PRODUCT_STATUS.md](LOCAL_PRODUCT_STATUS.md)
+> for the accepted local scope, all 18 current capability boundaries, Agent37 removal,
+> synthetic assessment authoring and reviewed continuation. The dated tables below
+> are preserved as historical foundation/integration snapshots.
+
 # Capability status — 20 October 2026
 
 Status refers to the supported local **synthetic simulation**. Implemented means the specified constrained path exists and was exercised, not real-hardware certification or a production service. Original acceptance criteria remain in PRODUCT_SPEC; current endpoints and limitations are in RECOVERY_CONTRACT.

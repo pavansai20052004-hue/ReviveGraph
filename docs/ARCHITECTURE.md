@@ -95,3 +95,25 @@ Orders progress pending → in_progress → awaiting_verification → verified_p
 Adapter contract: `interpret_logs(evidence) -> suggestions + evidence_refs` and `explain_plan(validated_plan) -> explanation + referenced_ids`. Later agent tools may read inventory, request simulation/solve and draft explanations under call/time limits. No arbitrary shell, SQL, health certification, compatibility-rule editing, approval, purchasing or work execution tools. Treat logs as data, enforce schemas and identifier existence, and redact secrets before optional provider calls. Deterministic reason text remains available offline.
 
 Impact starts with counts and budget estimates. Planned recovery is not actual avoided waste. Optional mass estimate = sum of explicitly sourced per-asset masses for physical verified passes, labeled “estimated mass retained in use,” with no component double-counting. CO2e requires a sourced replacement counterfactual, factor version and repair/transport adjustment; remain unavailable until chosen. Show scenario projections separately and never claim measured emissions savings or completed physical repairs from synthetic results.
+
+
+## Local completion slice — 25 October 2026
+
+Synthetic health now resolves through each subject's current assessment pointer;
+original imported row JSON and append-only prior assertions remain intact. New
+assessment routes use fleet-revision/current-assessment CAS and prohibit editing
+behind approved or recorded execution. No physical-health authoring was introduced.
+
+The additive schema-2 continuation table stores one immutable reviewed child per
+paused context revision. `reconciliation.py` reconstructs sunk charges from priced
+completed operations and every verification attempt, preserves scenario locations,
+and runs the existing locally validated solver with residual caps. Ancestor
+verification policy is inherited even for temporarily unselected targets. Old
+contexts stay paused; new exact approval/reservations and a new operation DAG are
+required. No source fixture, deterministic compatibility rule or ordinary snapshot
+optimizer behavior changed. See RECOVERY_CONTRACT.md for the additive API.
+
+Agent37 transport/settings/actions are removed. Local canonical evidence summaries
+remain. The Adaption dataset pipeline and real accepted artifact remain provider
+independent preparation; runtime AI is deferred. Hosted Render remains blocked by
+the recorded billing requirement, and Nodus work is postponed.

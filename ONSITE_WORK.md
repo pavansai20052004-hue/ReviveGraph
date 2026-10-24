@@ -315,3 +315,86 @@ participant will submit the form; no form submission or demo-video upload was
 performed by the assistant. Recommended category: Best Social Impact Build.
 Synthetic simulation and zero physical-repair claims remain explicit; hosted
 Render/Nodus execution remains blocked/unverified as previously recorded.
+
+## 24–25 October 2026 — Local product completion and Agent37 removal
+
+The participant requested completion of the local synthetic product, expressly
+chose to defer AI diagnosis/autonomous AI and physical repair, and instructed
+that Nodus work wait. Agent37 active transport, credential configuration,
+connection status and UI actions were removed; obsolete provider requests fail
+with HTTP 410 before writes/network. Local canonical evidence summaries and
+historical provider audits/disclosures remain. This does not retroactively
+establish live Agent37 use.
+
+Added append-only synthetic assessment authoring/history with expected inventory
+revision/current assessment ID, explicit simulation acknowledgement, source,
+synthetic evidence and actual server authoring time. Original imported row JSON
+and prior assertions remain unchanged. Effective health resolves through the
+assessment pointer; older unapproved plans become stale. Approved/recorded work
+locks assessment changes. No technician review or physical-health acceptance was
+introduced.
+
+Completed explicit post-start reconciliation into a uniquely linked continuation
+context. Recorded operations and every verification attempt enter the spent
+ledger; original caps minus those charges constrain the new local calculation.
+Saved scenario locations and failure exclusions carry forward; completed component
+moves are not replayed. Fresh preparation/verification are conservatively priced,
+including inherited verification requirements across repeated continuations. Old
+contexts stay paused. Fresh exact-plan approval/reservations and a new dependency
+DAG authorize residual work. Reports retain linked ancestor/order audit history.
+Verification retries also reserve the rest of the planned work before permitting
+additional attempt charges. Plan headroom is labeled projected.
+
+An independent reviewer reproduced two real defects in the new continuation
+slice: an unused looser plan could supply larger ceilings, and a second
+continuation could lose inherited verification for temporarily unselected targets.
+Both were fixed with regression cases. The first broad run also exposed an old
+restricted-case test that wrote legacy row health without current assessment;
+its setup was updated, keeping its one-target/no-spare assertions. Browser driver
+fixes scoped a visible history assertion and awaited work-order persistence. The
+first offline guard blocked Windows asyncio's own loopback socket pair; corrected
+to allow loopback while rejecting external connections/DNS.
+
+Actual final checks: 176 backend tests passed (111.42 s; existing upstream
+Starlette deprecation warning); original Chromium recovery flow 1 passed (30.2 s);
+local-only evidence/removed-provider browser flow 1 passed (12.9 s); new reviewed
+continuation browser flow passed desktop/390 px (24.6 s on final capture). Browser
+checklists, approval and evidence are explicitly automated authored simulation
+records. One child simulated verification pass was recorded in that browser run;
+physical repairs remain zero. Backend tests independently complete residual
+verification and test restart, idempotency/crash retry, contention, repeated
+continuation, limits and failed/inconclusive attempt accounting.
+
+Frontend typecheck/build, pip check, original 11-case preparation oracle and exact
+16-example explanation-dataset reproduction passed. Fixture/oracle/PRE_EVENT_WORK
+bytes were unchanged. The preserved real Adaption artifact passed offline loading
+(two bounded reference examples, 21,304 bytes), without inference, new spending or
+claimed application-accuracy improvement. Render SDK stays 1.4.0; Blueprint now
+explicitly names repo/main and authenticated validation returned valid=true with
+one planned workflow. No deployment, paid task or Nodus job was attempted; billing
+and native-Windows task-server blockers remain as recorded. Existing Figma and
+historical previews/tags/archives were preserved. New actual captures and sanitized
+results are in docs/implementation-previews/onsite-continuation-*.png and
+ docs/evidence/local-product-20261025.json. Full isolated browser receipt is under
+ignored data/local-product-review. No normal database was opened/reset by these
+checks. Current accepted scope, all 18 capability boundaries and repeatable demo
+are documented in docs/LOCAL_PRODUCT_STATUS.md. Earlier PRE_EVENT_WORK is intact.
+
+
+## 25 October 2026 - Local checkpoint before Nodus account continuation
+
+The participant approved checkpointing the validated local product and returning
+to Nodus. The repository's supplied local author identity was verified; no global
+Git configuration was changed. Current source, locks, tests, documentation,
+synthetic fixtures and intended previews are being reviewed for a new local commit
+and annotated tag; earlier tags/archives/receipts remain preserved. Prior passing
+suites are recorded as previously executed, not rerun merely for checkpointing.
+A separately named source-only ZIP and checksum/contents receipt will accompany
+the checkpoint; it requires dependency installation and excludes databases,
+credentials, environments and generated runtime files. No push is included.
+
+Nodus whoami currently reports not logged in. The official installed CLI login
+was opened for participant sign-in. The already authorized first CPU calculation
+is limited to US$0.10, five-minute job timeout and no automatic paid resubmission.
+No job or purchased credit is claimed by this account check. Full result/usage
+evidence will be recorded only after actual authenticated execution.

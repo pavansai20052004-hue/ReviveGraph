@@ -30,6 +30,12 @@ class SolveBody(Body):
     time_minutes: int = Field(default=330, ge=0, le=1000000, strict=True)
 
 
+class ReconcileBody(Body):
+    source_state_hash: str = Field(pattern=r"^[a-f0-9]{64}$")
+    reviewed: bool = Field(strict=True)
+    evidence_ref: str = Field(min_length=11, max_length=2000, pattern=r"^synthetic:.+")
+
+
 class FailureBody(Body):
     component_id: str
 
@@ -96,7 +102,12 @@ def snapshot(c, fleet_id, ctx, inventory):
         computer["installed_components"] = [p for p in components if p["location_asset_id"] == computer["asset_id"]]
         computer["usability"] = usability(computer, computer["installed_components"], computer["profile"])
     from .optimizer import ENGINE_VERSION
-    return {"computers": computers, "components": components, "mode": "simulation",
+    from .reconciliation import lineage
+    continuation = lineage(c, fleet_id, ctx["id"])
+    policy = {"continuation_policy_version": continuation["policy_version"],
+              "reconciliation_hash": continuation["lineage_hash"],
+              "verification_required_asset_ids": continuation["verification_required_asset_ids"]} if continuation else {}
+    return {**policy, "computers": computers, "components": components, "mode": "simulation",
             "operation_costs": registration["operation_costs"],
             "failed_component_ids": json.loads(ctx["failed_ids"]),
             "fleet_id": fleet_id, "inventory_revision": fleet["revision"],
@@ -157,6 +168,19 @@ def require_current(c, row, data, inventory, verify_inputs=False):
             raise ValueError("Stored operation/totals mismatch")
     except (ValueError, KeyError, TypeError) as exc:
         raise Problem(409, "PLAN_INVALID", "Independent validation failed; do not execute this plan.") from exc
+    from .reconciliation import lineage
+    continuation = lineage(c, row["fleet_id"], row["context_id"])
+    if continuation and (data.get("reconciliation") != continuation or data["snapshot"].get("reconciliation_hash") != continuation["lineage_hash"]):
+        raise Problem(409, "RECONCILIATION_INVALID", "Stored continuation review/accounting changed. Do not execute this plan.")
+    if continuation:
+        expected_accounting = {
+            "original_limits": continuation["original_limits"], "consumed": continuation["consumed"],
+            "remaining_limits": continuation["remaining_limits"],
+            "cumulative_projected": {
+                "cost_paise": continuation["consumed"]["cost_paise"] + data["result"]["totals"]["cost_paise"],
+                "technician_minutes": continuation["consumed"]["technician_minutes"] + data["result"]["totals"]["technician_minutes"]}}
+        if data.get("resource_accounting") != expected_accounting:
+            raise Problem(409, "RECONCILIATION_INVALID", "Continuation resource display differs from its pinned accounting.")
     if verify_inputs:
         current = snapshot(c, row["fleet_id"], context(c, row["fleet_id"], row["context_id"]), inventory)
         if sha(dump(current)) != data["snapshot_hash"]:
@@ -183,13 +207,23 @@ def calculate(db, inventory, body, actor, key, parent=None):
         c.execute("INSERT OR IGNORE INTO recovery_contexts VALUES (?,?,?,0,'[]','{}',0)", (body.fleet_id, body.context_id, fleet["mode"]))
         ctx = context(c, body.fleet_id, body.context_id)
         if ctx["paused"]:
-            raise Problem(409, "RECONCILIATION_REQUIRED", "Work started before failure. Review paused work and begin a separate simulation context; automatic reconciliation is not implemented.")
+            raise Problem(409, "RECONCILIATION_REQUIRED", "Work started before failure. Review paused work using reconciliation before continuing; direct recalculation is blocked.")
         if c.execute("SELECT 1 FROM recovery_reservations WHERE fleet_id=? AND context_id=? LIMIT 1", (body.fleet_id, body.context_id)).fetchone():
             raise Problem(409, "CONTEXT_RESERVED", "An approved plan reserves this execution context. Review that plan or choose a separate simulation context.")
         # Re-solving a running context would silently repeat operations. Require a
         # separate context for a fresh rehearsal, preserving completed transfers.
         if c.execute("SELECT 1 FROM recovery_steps s JOIN recovery_orders o ON o.id=s.order_id JOIN recovery_plans p ON p.id=o.plan_id WHERE p.fleet_id=? AND p.context_id=? AND s.status='done' LIMIT 1", (body.fleet_id, body.context_id)).fetchone():
             raise Problem(409, "EXECUTION_STARTED", "This rehearsal has started. Choose a new context for another rehearsal.")
+        from .reconciliation import lineage
+        continuation = lineage(c, body.fleet_id, body.context_id)
+        if continuation:
+            limits = continuation["remaining_limits"]
+            if (body.budget_paise != limits["budget_paise"] or body.time_minutes != limits["time_minutes"]
+                    or body.execution != "local" or body.orchestration != "local"):
+                raise Problem(409, "CONTINUATION_LIMITS_PINNED", "Continuation limits are the original ceilings minus recorded work; local execution is required.")
+            link = c.execute("SELECT * FROM recovery_reconciliations WHERE fleet_id=? AND target_context_id=?", (body.fleet_id, body.context_id)).fetchone()
+            if ctx["revision"] == 0 and link["target_plan_id"] is None and key != "continuation-" + link["id"]:
+                raise Problem(409, "CONTINUATION_PENDING", "Resume the original reviewed reconciliation request before calculating another plan.")
         source = snapshot(c, body.fleet_id, ctx, inventory)
         c.commit()
     try:
@@ -216,12 +250,25 @@ def calculate(db, inventory, body, actor, key, parent=None):
             "assumptions": ["Authored synthetic assertions and toy board profiles; simulation only.",
                             "Integer INR paise; single technician effort pool in minutes; no wages added.",
                             "No purchases; preparation includes handling and consumables; no environmental estimates."]}
+    if continuation:
+        data["reconciliation"] = continuation
+        data["resource_accounting"] = {
+            "original_limits": continuation["original_limits"], "consumed": continuation["consumed"],
+            "remaining_limits": continuation["remaining_limits"],
+            "cumulative_projected": {
+                "cost_paise": continuation["consumed"]["cost_paise"] + result["totals"]["cost_paise"],
+                "technician_minutes": continuation["consumed"]["technician_minutes"] + result["totals"]["technician_minutes"]}}
     data["input_hash"] = request_hash(data)
     with db.connect() as c:
         c.execute("BEGIN IMMEDIATE")
         prior = replay(c, key, fp)
         if prior:
             return public_plan(c, prior["id"])
+        if continuation:
+            from .reconciliation import checkpoint
+            reviewed = checkpoint(c, inventory, continuation["source_plan_id"])
+            if reviewed["source_state_hash"] != continuation["source_state_hash"]:
+                raise Problem(409, "RECONCILIATION_CHANGED", "Source work changed during continuation calculation. Refresh the reconciliation review.")
         current = snapshot(c, body.fleet_id, context(c, body.fleet_id, body.context_id), inventory)
         if sha(dump(current)) != data["snapshot_hash"]:
             raise Problem(409, "STALE_SNAPSHOT", "Inventory or scenario changed while solving. Retry the calculation.")
@@ -277,6 +324,16 @@ def install_routes(app, inventory, headers):
         with db.connect() as c:
             return public_plan(c, plan_id)
 
+    @app.get("/api/v1/plans/{plan_id}/reconciliation-preview")
+    def reconciliation_preview(plan_id: str):
+        from .reconciliation import preview
+        return preview(db, inventory, plan_id)
+
+    @app.post("/api/v1/plans/{plan_id}/reconcile")
+    def reconcile(plan_id: str, body: ReconcileBody, identity=Depends(headers)):
+        from .reconciliation import begin
+        return begin(db, inventory, plan_id, body, *identity, calculate)
+
     @app.post("/api/v1/plans/{plan_id}/failures")
     def fail(plan_id: str, body: FailureBody, identity=Depends(headers)):
         actor, key = identity
@@ -286,7 +343,7 @@ def install_routes(app, inventory, headers):
             prior = replay(c, key, fp)
             if prior:
                 if prior.get("paused"):
-                    raise Problem(409, "RECONCILIATION_REQUIRED", "Failure is recorded; work remains paused. Start a separate rehearsal after reviewing progress.")
+                    raise Problem(409, "RECONCILIATION_REQUIRED", "Failure is recorded; work remains paused. Open reconciliation review to continue from saved locations and remaining resources.")
                 if prior.get("pending"):
                     _, data = read_plan(c, plan_id)
                     c.commit()
@@ -300,6 +357,9 @@ def install_routes(app, inventory, headers):
             ctx = context(c, row["fleet_id"], row["context_id"])
             failed = sorted(set(json.loads(ctx["failed_ids"])) | {body.component_id})
             started = bool(c.execute("SELECT 1 FROM recovery_steps s JOIN recovery_orders o ON o.id=s.order_id JOIN recovery_plans p ON p.id=o.plan_id WHERE p.fleet_id=? AND p.context_id=? AND s.status='done' LIMIT 1", (row["fleet_id"], row["context_id"])).fetchone())
+            if started and (row["status"] != "approved" or not c.execute(
+                "SELECT 1 FROM recovery_steps s JOIN recovery_orders o ON o.id=s.order_id WHERE o.plan_id=? AND s.status='done' LIMIT 1", (plan_id,)).fetchone()):
+                raise Problem(409, "EXECUTION_PLAN_REQUIRED", "Inject a post-start failure from the approved plan whose work is executing.")
             c.execute("UPDATE recovery_contexts SET failed_ids=?,revision=revision+1,paused=? WHERE fleet_id=? AND id=?", (dump(failed), int(started), row["fleet_id"], row["context_id"]))
             c.execute("INSERT INTO recovery_failures VALUES (?,?,?,?,?,?)", (identifier("failure"), plan_id, ctx["revision"] + 1, body.component_id, actor, now()))
             c.execute("UPDATE recovery_plans SET status=? WHERE fleet_id=? AND context_id=? AND status IN ('validated','approved')", ("paused" if started else "stale", row["fleet_id"], row["context_id"]))
@@ -311,7 +371,7 @@ def install_routes(app, inventory, headers):
             remember(c, key, fp, {"pending": True, "paused": started, "parent": plan_id})
             c.commit()
         if started:
-            raise Problem(409, "RECONCILIATION_REQUIRED", "Failure recorded and work paused. Completed simulation steps/locations are preserved. Automatic reconciliation is not implemented; use a separate rehearsal context.")
+            raise Problem(409, "RECONCILIATION_REQUIRED", "Failure recorded and work paused. Completed simulation steps/locations are preserved. Review reconciliation explicitly to calculate a continuation with renewed approval.")
         return finish_failure(plan_id, key, fp, actor, data)
 
     def finish_failure(plan_id, key, fp, actor, data):
@@ -481,6 +541,19 @@ def install_routes(app, inventory, headers):
             step = json.loads(step_row["data"])
             valid_evidence(body, step["required_checks"], complete=body.outcome == "pass")
             dependencies_done(c, step)
+            # The plan prices one verification per target. Every additional
+            # attempt consumes another declared verification charge; reserve all
+            # remaining planned work so retries cannot bypass the hard limits.
+            extra_cash = extra_time = 0
+            for item in orders(c, plan["id"]):
+                attempts = len(item["verifications"]) + int(item["id"] == order_id)
+                repeated = max(0, attempts - 1)
+                operation = next(s for s in item["steps"] if s["operation"] == "verify_target")
+                extra_cash += repeated * operation["cost_paise"]
+                extra_time += repeated * operation["technician_minutes"]
+            if (data["result"]["totals"]["cost_paise"] + extra_cash > data["budget_paise"]
+                    or data["result"]["totals"]["technician_minutes"] + extra_time > data["time_minutes"]):
+                raise Problem(409, "VERIFICATION_RESOURCES_EXHAUSTED", "Another verification attempt would exceed the hard resource limits after reserving the remaining planned work.")
             # A pass must also agree with actual completed simulation locations.
             if body.outcome == "pass":
                 ctx = context(c, plan["fleet_id"], plan["context_id"])
@@ -533,8 +606,18 @@ def install_routes(app, inventory, headers):
         with db.connect() as c:
             plan = public_plan(c, plan_id)
             ids = [plan_id] + [o["id"] for o in plan["work_orders"]]
-            history_ids = [r["id"] for r in c.execute("SELECT id FROM recovery_plans WHERE fleet_id=? AND context_id=? ORDER BY rowid", (plan["fleet_id"], plan["context_id"]))]
+            contexts, cursor = [plan["context_id"]], plan["context_id"]
+            while True:
+                link = c.execute("SELECT source_context_id FROM recovery_reconciliations WHERE fleet_id=? AND target_context_id=?", (plan["fleet_id"], cursor)).fetchone()
+                if not link:
+                    break
+                cursor = link["source_context_id"]
+                if cursor in contexts:
+                    raise Problem(409, "RECONCILIATION_INVALID", "Continuation lineage contains a cycle.")
+                contexts.append(cursor)
+            history_ids = [r["id"] for r in c.execute("SELECT id,context_id FROM recovery_plans WHERE fleet_id=? ORDER BY rowid", (plan["fleet_id"],)) if r["context_id"] in contexts]
             ids += history_ids
+            ids += [r["id"] for r in c.execute("SELECT id,plan_id FROM recovery_orders") if r["plan_id"] in history_ids]
             events = [{**dict(r), "data": json.loads(r["data"])} for r in c.execute("SELECT * FROM audit_events ORDER BY id") if r["entity_id"] in ids]
             return {"report_version": "recovery-audit-v1", "generated_at": now(), "mode": "simulation",
                     "disclaimer": "Synthetic inputs and authored simulation checks; no physically verified repairs or environmental savings.",

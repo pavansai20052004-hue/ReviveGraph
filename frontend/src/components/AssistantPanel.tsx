@@ -6,13 +6,11 @@ import { Badge, ErrorNotice, Loading, Panel } from './ui/primitives'
 
 type Fact = { id: string; text: string; data: unknown }
 type Answer = { label: string; provider: string; asset_id?: string | null; recorded_at: string; actor: string; input_hash: string; output_hash: string; facts: Fact[]; plan_status_at_response: string; provider_evidence: { response_id?: string; usage?: unknown } }
-type Connections = { agent37: { configured: boolean; enabled: boolean; instance_reviewed: boolean } }
 
 export function AssistantPanel({ assetId }: { assetId: string }) {
   const [plans, setPlans] = useState<Plan[]>([])
   const [selected, setSelected] = useState('')
-  const [question, setQuestion] = useState('Why were these components selected, and what changed after failure?')
-  const [connections, setConnections] = useState<Connections | null>(null)
+  const [question, setQuestion] = useState('Review selected components, blockers and recorded failure changes.')
   const [answer, setAnswer] = useState<Answer | null>(null)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState('Loading saved plans…')
@@ -21,9 +19,9 @@ export function AssistantPanel({ assetId }: { assetId: string }) {
   currentView.current = selected + ':' + assetId
   useEffect(() => {
     let active = true
-    Promise.all([api<{ items: Plan[] }>('/plans'), api<Connections>('/integrations')]).then(([p, c]) => {
+    api<{ items: Plan[] }>('/plans').then(p => {
       if (!active) return
-      setPlans(p.items); setConnections(c)
+      setPlans(p.items)
       const saved = sessionStorage.getItem('revivegraph-plan')
       setSelected(p.items.find(x => x.id === saved)?.id ?? p.items[0]?.id ?? '')
     }).catch(e => active && setError((e as Error).message)).finally(() => active && setBusy(''))
@@ -39,45 +37,38 @@ export function AssistantPanel({ assetId }: { assetId: string }) {
     }).catch(e => active && setError((e as Error).message))
     return () => { active = false }
   }, [selected, assetId])
-  async function ask(provider: 'facts' | 'agent37') {
-    setError(''); setBusy(provider === 'agent37' ? 'Waiting for Agent37 fact selection…' : 'Reading validated plan evidence…')
-    const body = { question, provider, ...(assetId ? { asset_id: assetId } : {}) }
+  async function ask() {
+    setError(''); setBusy('Reading validated plan evidence...')
+    const body = { question, provider: 'facts', ...(assetId ? { asset_id: assetId } : {}) }
     const view = selected + ':' + assetId
     const fingerprint = selected + JSON.stringify(body)
     let key = keys.current.get(fingerprint)
     if (!key) { key = crypto.randomUUID(); keys.current.set(fingerprint, key) }
-    // Survives reload: an ambiguous paid attempt must not silently submit again.
-    if (provider === 'agent37') {
-      const storageKey = `revivegraph-assistant:${fingerprint}`
-      key = sessionStorage.getItem(storageKey) ?? key
-      sessionStorage.setItem(storageKey, key)
-    }
     try {
-      const result = await api<Answer>(`/plans/${selected}/assistant`, { ...jsonMutation(body, key), signal: AbortSignal.timeout(225000) })
+      const result = await api<Answer>(`/plans/${selected}/assistant`, { ...jsonMutation(body, key), signal: AbortSignal.timeout(30000) })
       if (currentView.current === view) setAnswer(result)
     } catch (e) { if (currentView.current === view) setError((e as Error).message) } finally { setBusy('') }
   }
   const plan = plans.find(p => p.id === selected)
-  const ready = connections?.agent37.configured && connections.agent37.enabled && connections.agent37.instance_reviewed
   return <Panel className="p-5 stack assistant-panel" aria-label="Grounded recovery assistant">
-    <span className="eyebrow">AI SUGGESTIONS — SEPARATE FROM ASSESSMENTS</span>
+    <span className="eyebrow">PLAN EVIDENCE — SEPARATE FROM ASSESSMENTS</span>
     <h2>Explain the actual recovery plan</h2>
-    <p className="muted">Agent37 selects relevant facts from independently checked allocations, blockers, alternatives and failure changes. Displayed facts come from the saved plan. Physical repairs: 0.</p>
-    <Badge tone={ready ? 'success' : 'warning'}>{ready ? 'Agent37 connection configured · live call not yet verified' : 'Agent37 not connected · local evidence available'}</Badge>
+    <p className="muted">Review independently checked allocations, blockers and recorded failure changes from a saved plan. This summary is deterministic and makes no AI request. Physical repairs: 0.</p>
+    <Badge>Local evidence only - no external AI provider</Badge>
     {error && <ErrorNotice message={error} />}
     {busy && <Loading text={busy} />}
     {plans.length ? <>
       <label>Assistant plan<select aria-label="Assistant plan" value={selected} disabled={!!busy} onChange={e => setSelected(e.target.value)}>{plans.map(p => <option key={p.id} value={p.id}>{p.id.slice(0, 13)} · {p.status} · {p.context_id}</option>)}</select></label>
       {plan && <p className="caption">Pinned input <span className="hash">{plan.input_hash}</span> · status {plan.status}. {assetId && `Inspecting ${assetId}.`} Stale plans are historical evidence and cannot authorize work.</p>}
-      <label>Question<textarea aria-label="Assistant question" maxLength={1500} rows={3} value={question} onChange={e => setQuestion(e.target.value)} /></label>
-      <div className="button-row"><Button variant="secondary" disabled={!!busy || !question.trim()} onClick={() => ask('facts')}>Read local evidence</Button><Button disabled={!!busy || !ready || !question.trim()} onClick={() => ask('agent37')}>Ask Agent37</Button></div>
-      <p className="caption">Local evidence makes no AI request. Ask Agent37 explicitly sends this synthetic plan context to your configured instance and may use account credits. No automatic paid retry. A timeout does not prove the remote turn stopped.</p>
+      <label>Review note<textarea aria-label="Review note" maxLength={1500} rows={3} value={question} onChange={e => setQuestion(e.target.value)} /></label>
+      <div className="button-row"><Button variant="secondary" disabled={!!busy || !question.trim()} onClick={() => ask()}>Read local evidence</Button></div>
+      <p className="caption">The review note is stored with a fixed plan/asset summary. It does not trigger natural-language interpretation, a provider request or account charges.</p>
     </> : !busy && <p className="muted">Import inventory and calculate a recovery plan first. Then return here to inspect its saved facts.</p>}
     {answer && <div className="stack" role="region" aria-label="Saved assistant answer">
-      <h3>{answer.label}</h3><p className="caption">Recorded {new Date(answer.recorded_at).toLocaleString()} · {answer.actor} · status at response {answer.plan_status_at_response}</p>
+      <h3>{answer.provider === 'facts' ? answer.label : 'Historical explanation - external provider removed'}</h3><p className="caption">Recorded {new Date(answer.recorded_at).toLocaleString()} · {answer.actor} · status at response {answer.plan_status_at_response}</p>
       {answer.facts.map(f => <div key={f.id} className="stack"><p>{f.text}</p><details><summary>Source fact: {f.id}</summary><pre style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{JSON.stringify(f.data, null, 2)}</pre></details></div>)}
       <details><summary>Response evidence</summary><p className="hash">Input {answer.input_hash}<br />Output {answer.output_hash}</p><pre style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{JSON.stringify(answer.provider_evidence, null, 2)}</pre></details>
     </div>}
-    <p className="caption">Assessment editing and physical diagnosis remain unavailable. This assistant cannot approve a plan, change health or record work.</p>
+    <p className="caption">Synthetic assessment authoring is available in Inventory before approval. AI and physical diagnosis remain deferred. This evidence summary cannot approve a plan, change health or record work.</p>
   </Panel>
 }

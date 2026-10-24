@@ -247,3 +247,17 @@ the passing check. No application import contract was changed to accommodate it.
   specifies binary/streaming downloads rather than assuming a returned URL.
 - [Evaluation response](https://docs.adaptionlabs.ai/api/python/resources/datasets/methods/get_evaluation/)
   defines evaluation status and quality metrics, which can finish after adaptation.
+
+
+## Current boundary — 25 October 2026
+
+Agent37 was removed from the active app at the participant's request; the preceding
+24 October transport checks are historical evidence. Dataset builder/SDK scripts,
+mocked tests, original dataset bytes and real accepted artifact are preserved.
+The accepted artifact was rechecked offline: hash
+`8e85fb150d0eb244351187248b5daf6756a35a8a0a6139c2caf8c1842c3de916`,
+two bounded examples selected (21,304 serialized bytes) against the complete
+training reference fact-ID set. This checks artifact loading, not inference or
+held-out accuracy. No paid call or new provider run was made. Current app evidence
+summaries use local facts directly; adapted examples are retained for a future
+provider and are not claimed to improve the present local summaries.

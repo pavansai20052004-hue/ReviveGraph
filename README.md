@@ -1,12 +1,31 @@
 # ReviveGraph
 
+**Current local product — 25 October 2026:** the accepted local synthetic workflow
+now includes append-only synthetic assessment authoring and explicit post-start
+failure reconciliation. Completed component movements/evidence carry forward;
+recorded costs and minutes are deducted from the original limits, and every
+continuation needs renewed exact-plan approval. Agent37 has been removed from
+active code/configuration/UI. Local evidence summaries remain deterministic.
+AI diagnosis/autonomous AI and physical repairs are explicitly deferred.
+
+The current validation passed **176 backend tests**, the original recovery browser
+flow, the removed-provider/local-evidence browser flow, and the new reviewed
+continuation browser flow at desktop/390 px. See
+[the complete current 18-capability status and repeatable demo](docs/LOCAL_PRODUCT_STATUS.md).
+Render source/Blueprint are validated but hosted execution remains billing-blocked;
+Adaption's completed synthetic dataset run/artifact is preserved without claiming
+runtime AI improvement. Nodus work remains on hold by participant instruction.
+The dated foundation record below describes earlier work; actual additions on
+24–25 October are recorded separately in [ONSITE_WORK.md](ONSITE_WORK.md).
+
+
 ReviveGraph helps colleges and refurbishment centres recover usable desktop configurations by reallocating compatible, healthy components within repair-resource limits.
 
 **Status — 21 October 2026, disclosed version 0.2.0:** the local synthetic flow works from **fixture registration → CSV preview → atomic import → inventory/evidence → deterministic compatibility/interactive graph → CP-SAT allocation and greedy comparison → selected donor failure/replanning → explicit approval/reservations → work orders → simulated verification → audit JSON export**.
 
-Built for Hackyard Build 2026 at IIT Guwahati, 24–25 October 2026, by a solo participant. The participant explicitly authorized advancing the central implementation before the event. Every addition is preparation, recorded in PRE_EVENT_WORK; it must not be relabeled as onsite work. The revised BUILD_PLAN proposes further meaningful onsite advancement. Exact Fetch overlap hours remain unconfirmed.
+Built for Hackyard Build 2026 at IIT Guwahati, 24–25 October 2026, by a solo participant. The participant explicitly authorized advancing the central implementation before the event. Those pre-event additions are preparation, recorded in PRE_EVENT_WORK; they must not be relabeled as onsite work. New onsite additions are recorded separately in ONSITE_WORK. The revised BUILD_PLAN proposes further meaningful onsite advancement. Exact Fetch overlap hours remain unconfirmed.
 
-The native Figma design, original synthetic-v1 files, preparation oracle, `pre-event-foundation-v0.1.0` tag and original source ZIP/receipt are preserved. AI, accepted-health editing, reviewed physical evidence and physical execution are not implemented. **No physical repairs, diagnostic measurements or environmental savings are claimed.**
+The native Figma design, original synthetic-v1 files, preparation oracle, `pre-event-foundation-v0.1.0` tag and original source ZIP/receipt are preserved. AI diagnosis, reviewed physical evidence and physical execution are deferred; synthetic assertion authoring is now available as described in the current status above. **No physical repairs, diagnostic measurements or environmental savings are claimed.**
 
 **Visual update — 20 October:** the participant's supplied dashboard screenshot is now the primary interface reference. Its compact dark sidebar, header, cards, table borders and hierarchy are implemented across the live workspaces. Dashboard uses actual fleet/alert data, discrete Recharts solver/greedy/parent comparisons, persisted workflow progress and a real audit feed. Reports now has a dedicated read-only interface and JSON export. [Desktop dashboard](docs/implementation-previews/reference-dashboard-desktop.png), [390 px dashboard](docs/implementation-previews/reference-dashboard-mobile.png) and [Reports](docs/implementation-previews/reference-reports-desktop.png) show actual isolated-test renders; no industrial metrics, generated history or live AI claims were copied.
 
@@ -77,7 +96,7 @@ SQLite persists at `data/revivegraph.sqlite3`; nothing is automatically seeded. 
 5. Review the exact revised plan ID/hash, acknowledge **simulated work only**, and approve. Rejection is also available before approval. The local actor is a supplied demo label, not authenticated technician identity. Reservations lock parts and targets in this execution context.
 6. Create work orders. Use **Show next available task** to open a prerequisite-ready operation; filter/search the queue or follow named dependency links. Saved checklists and evidence remain visible after reload. Complete target preparation and all donor/displacement removals before installations. Prerequisites may belong to another order. Check each required item explicitly and enter authored simulation evidence references; the app does not run diagnostics or wipe drives.
 7. Record pass, fail or inconclusive **simulated** verification. Pass requires completed work, all checks and matching final simulated installed IDs. Export audit JSON from Optimizer/Simulation.
-8. For another run, use **Use a new rehearsal context** in Optimizer. After any step starts, failure pauses unfinished work and preserves completed evidence/locations. Automatic reconciliation is unimplemented; review that history and begin an independent context rather than repeating old steps.
+8. For another run, use **Use a new rehearsal context** in Optimizer. After any step starts, failure pauses unfinished work and preserves completed evidence/locations. Use the reconciliation panel to review saved locations and incurred charges, calculate a linked local continuation within remaining limits, and approve that exact new plan before recording residual work. A new independent context starts over from imported inventory and is not a continuation.
 
 Simulation never changes physical component locations or health evidence. Restart preserves plans, reservations, work progress and verification. Physical repair counts remain zero. Environmental estimates remain unavailable because no sourced factors exist.
 

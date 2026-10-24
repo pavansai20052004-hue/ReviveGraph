@@ -129,7 +129,11 @@ def _initial_usable(target, parts, snapshot, failed):
 
 def _changed(allocation, target, parts, snapshot, failed):
     installed = {p["component_id"] for p in parts.values() if p.get("location_asset_id") == target["asset_id"]}
-    return set(_ids(allocation)) != installed or not _initial_usable(target, parts, snapshot, failed)
+    # Continuation policy explicitly requires a fresh verification for interrupted
+    # targets, even if completed installations already make the hardware usable.
+    # Existing snapshots without this optional field retain their original rules.
+    return (target["asset_id"] in snapshot.get("verification_required_asset_ids", [])
+            or set(_ids(allocation)) != installed or not _initial_usable(target, parts, snapshot, failed))
 
 
 def validate_output(snapshot, allocations, budget_paise, time_minutes):

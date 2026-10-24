@@ -264,17 +264,25 @@ def test_change_during_solve_refuses_persistence(env, monkeypatch, race):
 
 def test_failure_no_spare_yields_proven_zero_with_no_fake_orders(env):
     app, client, _ = env
-    # A deliberately restricted test database, not edits to synthetic-v1 files:
+    # A deliberately restricted test database, not edits to synthetic-v1 files.
+    # Effective health now comes from the current assessment; update both test
+    # assertions and legacy imported row fields when constructing this case:
     # PC05 can use only its retained RAM05 and stock SSD06.
     with app.state.db.connect() as c:
         for r in c.execute("SELECT * FROM computers").fetchall():
             data = json.loads(r["data"])
             data["base_health"] = "healthy" if r["id"] == "RG-PC-05" else "faulty"
             c.execute("UPDATE computers SET data=? WHERE id=?", (dump(data), r["id"]))
+            assessment = json.loads(c.execute("SELECT data FROM assessments WHERE id=?", (r["assessment_id"],)).fetchone()[0])
+            assessment["health"] = data["base_health"]
+            c.execute("UPDATE assessments SET data=? WHERE id=?", (dump(assessment), r["assessment_id"]))
         for r in c.execute("SELECT * FROM components").fetchall():
             data = json.loads(r["data"])
             data["health"] = "healthy" if r["id"] in ("RG-RAM-05", "RG-SSD-06") else "faulty"
             c.execute("UPDATE components SET data=? WHERE id=?", (dump(data), r["id"]))
+            assessment = json.loads(c.execute("SELECT data FROM assessments WHERE id=?", (r["assessment_id"],)).fetchone()[0])
+            assessment["health"] = data["health"]
+            c.execute("UPDATE assessments SET data=? WHERE id=?", (dump(assessment), r["assessment_id"]))
         c.execute("UPDATE fleets SET revision=revision+1"); c.commit()
     p = plan(client)
     assert p["result"]["totals"]["usable_final"] == 1
