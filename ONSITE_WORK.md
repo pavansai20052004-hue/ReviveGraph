@@ -297,8 +297,9 @@ preserved for a later explicit continuation after billing is available.
 
 The participant chose to submit the form personally and explicitly authorized
 making the existing private GitHub repository public after review. All 182
-unique reachable Git blobs (including 32 binary design/browser previews) and
-tracked paths were inspected with credential-pattern and sensitive-path checks.
+unique reachable Git blobs and tracked paths were inventoried. Credential
+patterns scanned the 150 text blobs; 32 binary design/browser previews were
+identified and preserved, without claiming OCR-based credential inspection.
 Two pattern findings were reviewed as intentional invalid-URL/mocked-key test
 fixtures; no live credential or sensitive tracked path was identified by these
 checks. This is a scoped source/history review, not a guarantee that automated
