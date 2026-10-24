@@ -292,3 +292,25 @@ passing prior suites were not repeated. Hosted Linux build, registered task
 inspection, remote calculation, downloaded remote validation and actual usage
 remain blocked/unverified. The private source and prepared deployment are
 preserved for a later explicit continuation after billing is available.
+
+## 24 October 2026 — Public submission link preparation
+
+The participant chose to submit the form personally and explicitly authorized
+making the existing private GitHub repository public after review. All 182
+unique reachable Git blobs (including 32 binary design/browser previews) and
+tracked paths were inspected with credential-pattern and sensitive-path checks.
+Two pattern findings were reviewed as intentional invalid-URL/mocked-key test
+fixtures; no live credential or sensitive tracked path was identified by these
+checks. This is a scoped source/history review, not a guarantee that automated
+patterns can identify every secret. The remote exposed only the reviewed main
+branch, matching f3fd86d4baa3b7868beb3ff1ba8c42996e5d21dc.
+
+The existing repository was changed from private to public at
+https://github.com/pavansai20052004-hue/ReviveGraph . An unauthenticated GitHub
+API read confirmed public visibility. Existing history, tags, fixtures, normal
+database, archives and receipts were preserved. No application code or provider
+configuration changed, no paid run was started and no tests were rerun. The
+participant will submit the form; no form submission or demo-video upload was
+performed by the assistant. Recommended category: Best Social Impact Build.
+Synthetic simulation and zero physical-repair claims remain explicit; hosted
+Render/Nodus execution remains blocked/unverified as previously recorded.
