@@ -109,12 +109,16 @@ For a separate rehearsal database, set `REVIVEGRAPH_DB` only in the backend proc
 
 The supported hardware model is intentionally constrained. Compatibility, part eligibility, ownership, resource accounting, and allocation are deterministic. Unknown health or decisive hardware details block allocation. A physical component cannot be allocated twice. Synthetic assessments are not technician-reviewed physical assessments.
 
-### AI and hosted-service disclosure
+### Integrations and what they do
 
-- **Agent37:** used during frontend design work. Its application runtime integration was later removed; no live Agent37 assistant is active in the current app.
-- **Adaption:** one authorized adaptation run used a synthetic explanation dataset. Its output is preserved as evidence for future use; ReviveGraph does not perform runtime inference with it or claim measured answer-quality improvement.
-- **Render:** hosts the temporary backend used by the Vercel demo. Render Workflows source and validation are prepared, but a hosted workflow was not deployed because the account requires billing details.
-- **Nodus:** cloud execution is postponed. Local CP-SAT remains the working optimizer path.
+| Service | How it fits ReviveGraph | What is working, and what is not |
+| --- | --- | --- |
+| **Adaption** | We created a 12-example synthetic dataset to teach an explanation layer to map differently worded questions to the correct, already-existing plan facts. It covers component blockers, compatibility, uncertain evidence, and safe next actions. | One adaptation run succeeded after an estimate of **1 credit / 11 minutes**. Adaption reported dataset scores of **4.0 to 8.6** (grades **D to B**). Those are provider-reported dataset metrics, not measured answer accuracy, hardware diagnosis, or solver improvement. Actual billed credits were not returned. The accepted examples passed local checks, but runtime use is opt-in and is not enabled in the normal app. No compatibility, health, allocation, or approval decision comes from Adaption. Details: [Adaption integration record](docs/ADAPTION_INTEGRATION.md). |
+| **Nodus** | We added an optional CPU-job adapter that sends a pinned synthetic request to a remote worker running the same CP-SAT solver, then checks the returned allocation and resource totals before it can be saved. This gives us a path to cloud CPU execution without changing the recovery rules. | The adapter, worker protocol, local tests, and UI provider choice are implemented. **No real Nodus job ran:** account sign-in stopped at payment-card verification. The demo therefore uses local laptop CPU (or the configured Render worker); Nodus is disabled by default and is not needed to try the app. Details: [Nodus integration record](docs/NODUS_INTEGRATION.md). |
+| **Agent37** | Used during frontend design and explored as an optional assistant for selecting relevant facts from the current plan. | No Agent37 assistant is active in the current app. Its output was not used to make hardware, health, compatibility, or recovery decisions. |
+| **Render** | Runs the temporary backend API used by the Vercel-hosted demo. | The demo API is available, but its storage is temporary and shared. Render Workflows source and local validation were prepared; no hosted workflow deployment or hosted workflow run was completed because the account required billing details. |
+
+The decision boundary is deliberate: deterministic compatibility and CP-SAT remain authoritative. AI-related services can help organize or explain existing facts; they cannot invent health evidence, change the optimizer's output, or record physical work. The normal app continues to work without Adaption, Agent37, or Nodus.
 
 ## Verification
 
