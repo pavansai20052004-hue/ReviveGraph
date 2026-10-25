@@ -1,5 +1,10 @@
 # ReviveGraph
 
+**Free web-demo deployment:** an optional same-origin host and explicit Free Render
+configuration are available. Hosted SQLite is temporary and shared; the normal
+local database remains separate. See [web hosting setup and verification gates](docs/RENDER_WEB_DEPLOYMENT.md).
+This is separate from the billing-blocked native Render Workflows integration.
+
 **Current local product — 25 October 2026:** the accepted local synthetic workflow
 now includes append-only synthetic assessment authoring and explicit post-start
 failure reconciliation. Completed component movements/evidence carry forward;
