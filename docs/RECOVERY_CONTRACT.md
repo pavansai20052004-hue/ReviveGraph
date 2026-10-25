@@ -85,3 +85,46 @@ specified in ASSISTANT_INTEGRATION.md. Explanations append audit records but
 cannot approve, mutate hardware assertions or complete work. All old physical
 and post-start reconciliation boundaries above still apply. Live provider
 success remains unverified; see ONSITE_WORK.md for actual checks.
+
+
+## Additive local contract — 25 October 2026
+
+The existing schema-2 initialization now also creates `recovery_reconciliations`
+without rewriting existing inventory, plans or historical evidence. It uniquely
+links a paused context revision to a new continuation context and stores immutable
+review/source-state/accounting hashes. Existing snapshots without continuation
+policy fields retain the original optimizer behavior. Policy
+`reviewed-simulation-continuation-v1` adds hashed snapshot fields
+`continuation_policy_version`, `reconciliation_hash`, and
+`verification_required_asset_ids`; selected interrupted targets incur fresh priced
+preparation/verification even when installations are already complete.
+
+- `GET /plans/{id}/reconciliation-preview`: only the approved paused plan that
+  recorded work; returns source-state hash, actual incurred operation attempts,
+  original ceilings, remaining limits, scenario locations and failure exclusions.
+- `POST /plans/{id}/reconcile`: `{source_state_hash, reviewed: true,
+  evidence_ref: "synthetic:..."}`, standard actor/idempotency headers. Creates or
+  resumes the same reviewed linked local calculation; no automatic approval.
+  Returns the new validated plan with `reconciliation` and `resource_accounting`.
+- Child budget/time are pinned to original ceilings minus all ancestor/current
+  consumed charges. The old source stays paused; normal exact approval,
+  reservation and work-order guards authorize only the new revision.
+- Stale state, unused source plan, altered lineage/accounting and a competing
+  continuation fail closed. Crash retry uses the original request/body/key.
+- A repeated verification attempt now reserves the other planned work and charges
+  one additional verification operation before accepting evidence. If it cannot
+  fit the current plan's limits, returns `VERIFICATION_RESOURCES_EXHAUSTED`.
+- Reports include all linked context ancestors and their order audit events.
+
+`GET /assessments/{computer|component}/{id}` returns append-only history/current ID.
+`POST` requires `{health, expected_revision, expected_assessment_id, source,
+evidence_ref: "synthetic:...", notes, simulation_only: true}` plus normal headers.
+It appends an authored assertion and updates the effective assessment pointer and
+fleet revision atomically. Original row JSON and old assessments are preserved.
+Authoring is blocked for physical subjects/fleets and fleets with approved or
+recorded execution. It never supplies human-reviewed physical evidence.
+
+`POST /plans/{id}/assistant` supports provider `facts` only; obsolete external
+provider values return HTTP 410 `EXPLANATION_PROVIDER_REMOVED` before writes/network.
+Local context/version/audit history remain compatible. Historical non-local answers
+are labeled as historical records from a removed provider.

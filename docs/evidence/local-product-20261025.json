@@ -1,0 +1,88 @@
+{
+  "record_date": "2026-10-25",
+  "scope": "Accepted local synthetic product; automated checks, not participant-entered technician work",
+  "physical_repairs": 0,
+  "agent37": "Removed from active transport/configuration/UI; historical records preserved",
+  "backend": {
+    "command": ".\\.venv\\Scripts\\python.exe -m pytest -q",
+    "passed": 176,
+    "duration_seconds": 111.42,
+    "warning": "Existing Starlette/httpx deprecation"
+  },
+  "browser": {
+    "original_recovery": "1 passed, 30.2 seconds",
+    "local_evidence_and_removed_provider": "1 passed, 12.9 seconds",
+    "reviewed_continuation": "1 passed, 24.6 seconds; desktop and 390px, automated authored simulation evidence only"
+  },
+  "actual_browser_calculation": {
+    "original_totals": {
+      "cost_paise": 215000,
+      "newly_recovered": 7,
+      "technician_minutes": 299,
+      "transfers": 7,
+      "usable_final": 7
+    },
+    "original_solver_status": "OPTIMAL",
+    "baseline_totals": {
+      "cost_paise": 215000,
+      "newly_recovered": 7,
+      "technician_minutes": 299,
+      "transfers": 7,
+      "usable_final": 7
+    },
+    "failed_component": "RG-SSD-10",
+    "continuation_totals": {
+      "cost_paise": 215000,
+      "newly_recovered": 7,
+      "technician_minutes": 299,
+      "transfers": 7,
+      "usable_final": 7
+    },
+    "continuation_solver_status": "OPTIMAL",
+    "accounting": {
+      "consumed": {
+        "cost_paise": 10000,
+        "technician_minutes": 10
+      },
+      "cumulative_projected": {
+        "cost_paise": 225000,
+        "technician_minutes": 309
+      },
+      "original_limits": {
+        "budget_paise": 250000,
+        "time_minutes": 330
+      },
+      "remaining_limits": {
+        "budget_paise": 240000,
+        "time_minutes": 320
+      }
+    },
+    "recorded_simulated_passes_in_child": 1
+  },
+  "offline_scope": "Local solve/evidence passed with process-scoped external socket/DNS denial (loopback allowed). Browser rejected non-local requests. Not a fresh OS-level offline startup or dependency installation test.",
+  "adaption": {
+    "paid_runs_this_slice": 0,
+    "existing_artifact_hash": "8e85fb150d0eb244351187248b5daf6756a35a8a0a6139c2caf8c1842c3de916",
+    "offline_acceptance": "accepted; two reference examples, 21304 serialized bytes; training-reference IDs, no inference/accuracy claim"
+  },
+  "render": {
+    "blueprint_validation": true,
+    "planned_workflows": 1,
+    "deployments_this_slice": 0,
+    "hosted_runs": 0,
+    "status": "Still blocked by recorded billing requirement; native Windows task-server blocker preserved"
+  },
+  "nodus": "No new integration work or jobs; postponed by participant",
+  "checks": {
+    "frontend_typecheck": "PASS",
+    "production_build": "PASS",
+    "pip_check": "PASS",
+    "fixture_oracle": "PASS, 11 tiny cases",
+    "explanation_dataset_reproduction": "PASS,16 examples",
+    "fixture_and_oracle_and_PRE_EVENT_WORK_diff": "unchanged"
+  },
+  "previews": [
+    "docs/implementation-previews/onsite-continuation-desktop.png",
+    "docs/implementation-previews/onsite-continuation-mobile.png"
+  ]
+}

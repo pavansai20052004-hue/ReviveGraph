@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: revivegraph-demo
+    runtime: python
+    plan: free
+    region: singapore
+    repo: https://github.com/pavansai20052004-hue/ReviveGraph
+    branch: codex/render-free-demo
+    autoDeployTrigger: "off"
+    buildCommand: python -m pip install --disable-pip-version-check -r backend/requirements.lock.txt && npm --prefix frontend ci && npm --prefix frontend run build
+    startCommand: python -m uvicorn revivegraph.web:create_web_app --factory --app-dir backend --host 0.0.0.0 --port $PORT --workers 1
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.14.7
+      - key: NODE_VERSION
+        value: 24.19.0
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: VITE_PUBLIC_DEMO
+        value: "1"
+      - key: REVIVEGRAPH_DB
+        value: /tmp/revivegraph-demo.sqlite3
+      - key: REVIVEGRAPH_NODUS_ENABLED
+        value: "0"
+      - key: REVIVEGRAPH_RENDER_ENABLED
+        value: "0"

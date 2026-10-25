@@ -1,0 +1,65 @@
+{
+  "recorded_at_utc": "2026-10-25T03:25:02.586338+00:00",
+  "scope": "Single reattempt of previously prepared native Render workflow creation after participant explicitly requested deployment again",
+  "workspace": {
+    "id": "tea-d69gif86fj8s73ciknig",
+    "name": "My Workspace",
+    "confirmed_prior_user_selection": true
+  },
+  "access": {
+    "connector_workspace_listing": "passed",
+    "cli_whoami": "authenticated correct account",
+    "cli_current_workspace": "My Workspace",
+    "public_owner_api": "200; exposes identity only, no credit/payment balance"
+  },
+  "source": {
+    "local_commit": "45b7c3fe9a8a8f155407453a2532d3fb27750126",
+    "remote_main_before_attempt": "d5cc5375b14a6f287818ce2c02227e65b6a1bc0d",
+    "source_pushed_this_task": false,
+    "deploy_version_submitted": false
+  },
+  "creation_attempt": {
+    "attempts_this_task": 1,
+    "method": "official Render CLI v2.31.0 workflows create",
+    "name": "revivegraph-recovery-workflow",
+    "region": "singapore",
+    "auto_deploy_trigger": "off",
+    "nodus_enabled": false,
+    "http_status": 402,
+    "message": "Payment information is required to complete this request. To add a card, visit https://dashboard.render.com/billing",
+    "workflow_created": false
+  },
+  "workflow_list_after_attempt": [],
+  "hosted_task_runs_this_task": 0,
+  "actual_usage_returned": null,
+  "event_credit_balance": "Not verified: owner API does not expose billing/credit data; user reports available event credits",
+  "payment_method_changed": false,
+  "credits_purchased": false,
+  "credentials_included": false,
+  "explanation": "Native Render Workflows is metered compute/state retention. Free web-service hosting is a different product. Account creation gate currently requires payment information despite user-reported event credits. No claim is made that the credits are absent or cannot apply.",
+  "official_references": [
+    {
+      "url": "https://render.com/docs/workflows-limits",
+      "point": "Workflow task compute and retained arguments/results are billed"
+    },
+    {
+      "url": "https://render.com/terms",
+      "point": "Section 4.7 requires current valid payment method for paid services"
+    },
+    {
+      "url": "https://render.com/pricing",
+      "point": "Free compute lists web services, Key Value and Postgres, not native Workflows"
+    },
+    {
+      "url": "https://api-docs.render.com/reference/createworkflow",
+      "point": "Native workflow creation endpoint"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/render-oss/cli/v2.31.0/pkg/tui/views/workflows/workflowcreate.go",
+      "point": "CLI configcreation call; automatic deploy explicitly off"
+    }
+  ],
+  "remaining_blocker": "Participant must activate billing or ask Render/event sponsor to apply event-credit entitlement/waive payment gate. Agent will not enter payment details or buy credits.",
+  "normal_database_modified": false,
+  "application_code_modified": false
+}

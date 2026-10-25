@@ -115,3 +115,15 @@ assistant behavior, separately obtain approved before/after held-out Agent37
 predictions and compare exact selection accuracy and unsupported-ID rate. Do not
 substitute Adaption's dataset scores for this application evaluation. No further
 paid run, core feature expansion or live Agent37 call is part of this timebox.
+
+
+## Actual local completion — 24–25 October 2026
+
+Participant scope: finish the local synthetic product, remove active Agent37,
+defer AI/physical work, and keep Nodus on hold. Completed append-only synthetic
+assessment authoring, explicit post-start reconciliation with inherited evidence
+and spent/remaining accounting, renewed approval and residual work. Preserved all
+18 capabilities and historical disclosures. Current boundaries and actual checks
+are consolidated in LOCAL_PRODUCT_STATUS.md. Render remains billing-blocked;
+Adaption's real run/artifact is preserved and revalidated offline. No additional
+paid run was made. Fetch overlap remains unresolved; no hours are invented.

@@ -1,3 +1,48 @@
+# Local plan evidence - current boundary, 24 October 2026
+
+The participant requested removal of Agent37 from the active product. Its HTTP
+transport, account configuration, public connection status, UI action and setup
+variables have been removed. Existing ignored credential files and persisted
+historical audit records are not rewritten or erased; removed settings are no
+longer read. No account deletion or external provider action was performed.
+
+## Supported local interface
+
+`GET /api/v1/plans/{id}/assistant-context?asset_id=RG-PC-06` retains pinned-plan
+hash checks, independent allocation/operation validation, compatibility versus
+eligibility facts, blockers, checked alternatives and failure comparisons.
+
+`POST /api/v1/plans/{id}/assistant` retains the `question`/`provider`/`asset_id`
+shape and actor/idempotency headers for compatible local clients. The only
+supported provider is `facts` (also the default). Any other provider returns
+HTTP 410 `EXPLANATION_PROVIDER_REMOVED` before any attempt/audit write or network
+request; an obsolete client cannot silently fall back and mislabel its result.
+The `question` value is a recorded review note, not a natural-language query.
+A fixed plan/asset summary renders canonical facts. This is not AI diagnosis.
+
+Answers remain bound to exact input/output hashes, actor, selected asset and
+recording time. Idempotent replay and conflict checks remain. A plan status/hash
+change before acceptance rejects the answer. The summary cannot edit health,
+compatibility, reservations, approvals, work orders or verification. Recording
+it is an audit write. Physical repair counts stay zero.
+
+`GET /api/v1/integrations` exposes the local evidence provider and Render
+configuration status, never removed provider settings or credentials. The
+frontend makes no external AI request and identifies older non-local answers
+as historical explanations from a removed provider. Persisted data remains
+available in the full audit export.
+
+Adaption's versioned dataset, original run receipts, accepted artifacts and
+independent preparation scripts are preserved. Removing the explanation provider
+does not prove a replacement AI integration or improved application accuracy.
+The dataset/version pins remain unchanged; see ADAPTION_INTEGRATION.md for the
+recorded run and current downstream integration boundary.
+
+## Historical implementation notes - superseded by removal above
+
+The following original notes document what was prepared earlier on 24 October.
+They are retained as historical disclosure, not current setup instructions.
+
 # Grounded assistant — onsite increment, 24 October 2026
 
 The Diagnostics screen preserves imported assessment inspection and now adds a

@@ -1,4 +1,4 @@
-"""Preparation uses test-authored actors and transport doubles, never live AI credit."""
+"""Local evidence and removed-provider regression tests; no live service calls."""
 import json
 
 import httpx
@@ -10,18 +10,11 @@ from revivegraph import assistant
 from revivegraph.main import create_app
 
 
-def configured(monkeypatch):
-    monkeypatch.setenv('AGENT37_INSTANCE_URL', 'https://test-instance.agent37.app')
-    monkeypatch.setenv('AGENT37_API_KEY', 'test-key-not-a-real-secret')
-    monkeypatch.setenv('REVIVEGRAPH_AGENT37_ENABLED', '1')
-    monkeypatch.setenv('REVIVEGRAPH_AGENT37_INSTANCE_REVIEWED', '1')
-
-
 def test_local_facts_replay_evidence_and_restart(env, monkeypatch):
     app, client, path = env
     p = plan(client)
     before = client.get('/api/v1/components').json()
-    monkeypatch.setattr(assistant, 'agent37_select', lambda *a, **k: pytest.fail('Local summary must not call a provider'))
+    monkeypatch.setattr(httpx.HTTPTransport, 'handle_request', lambda *a, **k: pytest.fail('Local summary must not make a network request'))
     facts = client.get(f"/api/v1/plans/{p['id']}/assistant-context?asset_id=RG-PC-06")
     assert facts.status_code == 200, facts.text
     facts = facts.json()
@@ -47,72 +40,41 @@ def test_local_facts_replay_evidence_and_restart(env, monkeypatch):
     assert reopened.get('/api/v1/components').json() == before
 
 
-@pytest.mark.parametrize('value', ['http://localhost', 'https://evil.example', 'https://a.agent37.app:wrong', 'https://a.agent37.app/path', 'https://user:pass@a.agent37.app', 'https://[bad'])
-def test_provider_url_restricted(monkeypatch, value):
-    monkeypatch.setenv('AGENT37_INSTANCE_URL', value)
-    assert assistant.configuration()[2] is False
 
-
-@pytest.mark.parametrize('data', [
-    {'status': 'failed', 'output_text': '{"fact_ids":["plan-summary"]}'},
-    {'status': 'completed', 'output_text': '{"fact_ids":["invented-repair"]}'},
-    {'status': 'completed', 'output_text': '{"fact_ids":["plan-summary"],"claim":"100 repaired"}'},
-    {'status': 'completed', 'output_text': '{"fact_ids":[true]}'},
-    {'status': 'completed', 'output_text': 'Seven physical repairs completed'},
-    ['unexpected-array'],
-    {'status': 'completed', 'output_text': 123},
-])
-def test_unsupported_model_output_rejected(monkeypatch, data):
-    configured(monkeypatch)
-    monkeypatch.setattr(httpx.Client, 'post', lambda *a, **k: httpx.Response(200, json=data, request=httpx.Request('POST', 'https://test-instance.agent37.app/v1/responses')))
-    cfg, url, _ = assistant.configuration()
-    with pytest.raises(assistant.Problem) as error:
-        assistant.agent37_select('question', {'plan_id':'test','input_hash':'hash','facts':[{'id':'plan-summary'}]}, cfg, url)
-    assert error.value.code == 'AGENT37_RESPONSE_REJECTED'
-
-
-def test_agent37_transport_selection_no_paid_retry(env, monkeypatch):
+@pytest.mark.parametrize('provider', ['agent37', 'another-external-provider'])
+def test_removed_provider_rejected_before_any_attempt(env, monkeypatch, provider):
     app, client, _ = env
     p = plan(client)
-    configured(monkeypatch)
-    calls = []
-    original_post = httpx.Client.post
-    def remote(self, url, **kwargs):
-        if isinstance(self, TestClient):
-            return original_post(self, url, **kwargs)
-        calls.append((url, kwargs))
-        return httpx.Response(200, json={'id':'mock-response-not-live', 'status':'completed', 'output_text':json.dumps({'fact_ids':['plan-summary','greedy-comparison']}), 'usage':{'cost_usd':None}}, request=httpx.Request('POST',url))
-    monkeypatch.setattr(httpx.Client, 'post', remote)
-    r = post(client, f"/plans/{p['id']}/assistant", {'question':'Why this allocation?','provider':'agent37'}, 'ai-selection')
-    assert r.status_code == 200, r.text
-    assert r.json()['provider_evidence']['response_id'] == 'mock-response-not-live'
-    assert [f['id'] for f in r.json()['facts']] == ['plan-summary','greedy-comparison']
-    assert calls[0][0].endswith('/v1/responses')
-    assert calls[0][1]['headers']['X-Agent37-Key'] == 'test-key-not-a-real-secret'
-    assert post(client, f"/plans/{p['id']}/assistant", {'question':'Why this allocation?','provider':'agent37'}, 'ai-selection').json() == r.json()
-    assert len(calls) == 1
-    def timeout(self, url, **kwargs):
-        if isinstance(self, TestClient):
-            return original_post(self, url, **kwargs)
-        raise httpx.ReadTimeout('test timeout')
-    monkeypatch.setattr(httpx.Client, 'post', timeout)
-    body = {'question':'timeout','provider':'agent37'}
-    assert post(client, f"/plans/{p['id']}/assistant", body, 'timeout').status_code == 502
-    assert post(client, f"/plans/{p['id']}/assistant", body, 'timeout').status_code == 409
+    # Even stale locally stored configuration cannot reactivate the removed code.
+    monkeypatch.setenv('AGENT37_INSTANCE_URL', 'https://test-instance.agent37.app')
+    monkeypatch.setenv('AGENT37_API_KEY', 'mock-key-not-a-real-secret')
+    monkeypatch.setenv('REVIVEGRAPH_AGENT37_ENABLED', '1')
+    monkeypatch.setenv('REVIVEGRAPH_AGENT37_INSTANCE_REVIEWED', '1')
+    monkeypatch.setattr(httpx.HTTPTransport, 'handle_request', lambda *a, **k: pytest.fail('Removed provider must never contact the network'))
     with app.state.db.connect() as c:
+        before = c.execute('SELECT COUNT(*) FROM recovery_requests').fetchone()[0]
+    r = post(client, f"/plans/{p['id']}/assistant", {'question':'explain','provider':provider}, 'removed-provider')
+    assert r.status_code == 410, r.text
+    assert r.json()['error']['code'] == 'EXPLANATION_PROVIDER_REMOVED'
+    with app.state.db.connect() as c:
+        assert c.execute('SELECT COUNT(*) FROM recovery_requests').fetchone()[0] == before
+        assert c.execute("SELECT COUNT(*) FROM audit_events WHERE action='assistant_explanation'").fetchone()[0] == 0
         assert c.execute('SELECT COUNT(*) FROM recovery_decisions').fetchone()[0] == 0
 
 
-@pytest.mark.parametrize('gate', ['REVIVEGRAPH_AGENT37_ENABLED', 'REVIVEGRAPH_AGENT37_INSTANCE_REVIEWED'])
-def test_unconfigured_agent_does_not_create_attempt(env, monkeypatch, gate):
-    app, client, _ = env
-    p = plan(client)
-    configured(monkeypatch)
-    monkeypatch.setenv(gate, '0')
-    r = post(client, f"/plans/{p['id']}/assistant", {'question':'test','provider':'agent37'}, 'unconfigured')
-    assert r.status_code == 503
-    with app.state.db.connect() as c:
-        assert c.execute('SELECT * FROM recovery_requests WHERE key=?', ('unconfigured',)).fetchone() is None
+def test_public_integrations_and_settings_do_not_expose_removed_provider(env, monkeypatch, tmp_path):
+    from revivegraph import settings
+    _, client, _ = env
+    (tmp_path / '.env.onsite').write_text('AGENT37_API_KEY=mock-removed-value\nAGENT37_INSTANCE_URL=https://test.agent37.app\nRENDER_API_KEY=mock-render-value\n')
+    monkeypatch.setattr(settings, 'ROOT', tmp_path)
+    monkeypatch.setenv('REVIVEGRAPH_AGENT37_ENABLED', '1')
+    result = settings.settings()
+    assert not any('AGENT37' in name for name in result)
+    assert result['RENDER_API_KEY'] == 'mock-render-value'
+    integrations = client.get('/api/v1/integrations').json()
+    assert 'agent37' not in integrations
+    assert integrations['assistant'] == {'provider':'facts','network_requests':False}
+    assert 'mock-render-value' not in json.dumps(integrations)
 
 
 def test_failed_donor_facts_are_excluded_and_original_is_stale(env):
@@ -133,17 +95,45 @@ def test_failed_donor_facts_are_excluded_and_original_is_stale(env):
     assert any(f['id'] == 'plan-action-blocked' for f in original['facts'])
 
 
-def test_status_changed_during_provider_call_is_not_accepted(env, monkeypatch):
+
+def test_status_changed_during_local_summary_is_not_accepted(env, monkeypatch):
     app, client, _ = env
     p = plan(client)
-    configured(monkeypatch)
-    def mutate(*args):
+    original = assistant.select_facts
+    def mutate(evidence, asset_id):
         with app.state.db.connect() as c:
             c.execute("UPDATE recovery_plans SET status='stale' WHERE id=?", (p['id'],))
             c.commit()
-        return ['plan-summary'], {'status':'mock-only'}
-    monkeypatch.setattr(assistant, 'agent37_select', mutate)
-    r = post(client, f"/plans/{p['id']}/assistant", {'question':'explain','provider':'agent37'})
+        return original(evidence, asset_id)
+    monkeypatch.setattr(assistant, 'select_facts', mutate)
+    r = post(client, f"/plans/{p['id']}/assistant", {'question':'review','provider':'facts'})
     assert r.status_code == 409 and r.json()['error']['code'] == 'PLAN_STATUS_CHANGED'
     with app.state.db.connect() as c:
         assert c.execute("SELECT COUNT(*) FROM audit_events WHERE action='assistant_explanation'").fetchone()[0] == 0
+
+
+def test_invalid_stored_plan_and_unknown_asset_are_rejected(env):
+    app, client, _ = env
+    p = plan(client)
+    r = client.get(f"/api/v1/plans/{p['id']}/assistant-context?asset_id=unknown-asset")
+    assert r.status_code == 404
+    with app.state.db.connect() as c:
+        data = json.loads(c.execute("SELECT data FROM recovery_plans WHERE id=?", (p['id'],)).fetchone()['data'])
+        data['output_hash'] = 'tampered'
+        c.execute("UPDATE recovery_plans SET data=? WHERE id=?", (json.dumps(data), p['id']))
+        c.commit()
+    r = post(client, f"/plans/{p['id']}/assistant", {'question':'review'})
+    assert r.status_code == 409 and r.json()['error']['code'] == 'PLAN_INVALID'
+
+
+def test_historical_external_explanation_audit_is_preserved(env):
+    app, client, _ = env
+    p = plan(client)
+    historical = {'provider':'agent37','label':'Historical mock provider record','asset_id':None,'facts':[]}
+    with app.state.db.connect() as c:
+        assistant.audit(c, 'assistant_explanation', p['id'], 'test-historical-actor', historical)
+        c.commit()
+    post(client, f"/plans/{p['id']}/assistant", {'question':'new local summary','provider':'facts'})
+    events = client.get(f"/api/v1/plans/{p['id']}/report").json()['audit_events']
+    assert any(e['action']=='assistant_explanation' and e['data']==historical for e in events)
+    assert any(e['action']=='assistant_explanation' and e['data'].get('provider')=='facts' for e in events)

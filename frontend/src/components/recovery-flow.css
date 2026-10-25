@@ -57,7 +57,7 @@
  .recovery-action-banner h2 { font-size: 16px; line-height: 22px; }
  .recovery-action-banner p { font-size: 11px; line-height: 18px; }
  .recovery-action-banner > button { margin-left: 0; width: 100%; min-height: 44px; }
- .resource-headroom { gap: 8px; }.resource-headroom > div { padding: 10px; }.resource-headroom strong { font-size: 15px; }
+ .resource-headroom { gap: 8px; grid-template-columns: 1fr; }.resource-headroom > div { padding: 10px; }.resource-headroom strong { font-size: 15px; }
  .work-queue-summary { padding: 12px; }.work-queue-summary > button { width: 100%; min-height: 44px; }
  .work-queue-controls > div { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }.work-queue-controls button { min-height: 44px; }
  .allocation-comparison .allocation-diff code { font-size: 10px; }.allocation-deltas > span { flex: 1 1 100%; justify-content: space-between; }

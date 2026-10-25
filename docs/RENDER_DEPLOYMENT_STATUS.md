@@ -137,3 +137,13 @@ This task changed no application behavior and did not rerun the already-passing
 available CLI/account/schema paths and the necessary isolated payload check.
 Native Linux dependency installation, actual task-server execution, hosted
 registration/calculation, cloud logs and real billing remain unverified.
+
+
+## Recheck — 25 October 2026
+
+The current Blueprint explicitly includes the now-public repository URL and main
+branch. Authenticated semantic validation returned valid=true with one planned
+workflow. Installed SDK remains render 1.4.0. Full backend workflow regressions
+pass within the 176-test suite. No creation, deployment or paid execution was
+retried; the recorded billing stop and Windows task-server limitation remain.
+This is preparation/source validation only, not hosted integration completion.

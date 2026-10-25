@@ -57,3 +57,14 @@ P1 additions include live AI integration, agent orchestration, sourced environme
 Assume institution-owned desktop stock with permitted transfers within one owner, fixed serviceable base assemblies for recovery targets, synthetic cost/time inputs and a single technician-minute pool. Default useful configuration: at least 8 GiB RAM and one storage device of at least 240 GB (decimal), subject to board limits. These are demo policy choices, not universal minimums.
 
 Synthetic CSV rows, toy board profiles and cost/time assumptions are pinned in [fixture v1](FIXTURE_SPEC.md); its original preparation oracle remains separate from the implemented application's solver/lifecycle tests. The AI provider/model, optional impact factors and availability of any real machines remain undecided. The [Figma design](https://www.figma.com/design/Z3UwUmtqAq7HsMWLeYgcpV) contains **illustrative** counts, component IDs and resource values for layout/prototype purposes; it is not a solver result and has not been reconciled to actual computation. These acceptance criteria define the full product; only the supported subset recorded in IMPLEMENTATION_STATUS has implementation/test evidence.
+
+
+## Accepted local scope — 25 October 2026
+
+The participant chose to finish the local synthetic product and defer AI diagnosis,
+autonomous AI and physical repairs. All 18 planned capabilities above remain in the
+specification. Agent37 is removed from the active product. Manual synthetic
+assessment history/authoring and explicit reviewed continuation after started-work
+failure now complete the supported local flow; see LOCAL_PRODUCT_STATUS.md.
+Environmental factors, production authentication, broader hardware, PDF reports
+and hosted-provider account readiness remain later scope, not hidden completions.

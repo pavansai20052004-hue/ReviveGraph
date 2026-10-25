@@ -111,7 +111,7 @@ def package(download, mapping, receipt, folder=SOURCE):
 
 
 def load_examples(question, evidence):
-    """Fail closed to zero examples; the existing Agent37/current-facts gate stays active."""
+    """Fail closed to zero examples; consumers must enforce the current-facts gate."""
     configured = os.environ.get('REVIVEGRAPH_ADAPTION_EXAMPLES')
     if not configured:
         return [], {'status':'disabled','examples':0}

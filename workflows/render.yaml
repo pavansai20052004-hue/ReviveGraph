@@ -3,6 +3,8 @@
     {
       "type": "workflow",
       "name": "revivegraph-recovery-workflow",
+      "repo": "https://github.com/pavansai20052004-hue/ReviveGraph",
+      "branch": "main",
       "runtime": "python",
       "region": "singapore",
       "buildCommand": "python -m pip install --disable-pip-version-check -r backend/requirements-render.lock.txt -r backend/requirements-nodus.lock.txt",

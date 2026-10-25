@@ -95,7 +95,7 @@ export function ReportsView({ onNavigate }: { onNavigate: (page: string) => void
     {reportLoading && <Loading text="Reading the selected plan and its audit history…" />}
     {report && plan && <>
       <div className="reports-metrics">
-        <Panel className="reports-metric"><span className="reports-metric-icon blue"><ReportMark /></span><span>PLAN REVISIONS</span><strong>{report.history.length}</strong><small>Within this rehearsal context</small></Panel>
+        <Panel className="reports-metric"><span className="reports-metric-icon blue"><ReportMark /></span><span>PLAN REVISIONS</span><strong>{report.history.length}</strong><small>Linked rehearsal history</small></Panel>
         <Panel className="reports-metric"><span className="reports-metric-icon violet"><ReportMark kind="activity" /></span><span>WORK PROGRESS</span><strong>{completedSteps}<em> / {steps.length}</em></strong><small>Recorded completed steps</small></Panel>
         <Panel className="reports-metric"><span className="reports-metric-icon green"><ReportMark kind="check" /></span><span>SIMULATED PASSES</span><strong>{simulatedPasses}</strong><small>Authored checks, not physical repairs</small></Panel>
         <Panel className="reports-metric"><span className="reports-metric-icon amber"><ReportMark kind="pin" /></span><span>PHYSICAL REPAIRS</span><strong>{report.physical_verified_repairs}</strong><small>Physical execution unavailable</small></Panel>

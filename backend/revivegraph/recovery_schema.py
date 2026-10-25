@@ -29,6 +29,15 @@ CREATE TABLE IF NOT EXISTS recovery_failures (
  context_revision INTEGER NOT NULL, component_id TEXT NOT NULL,
  actor TEXT NOT NULL, occurred_at TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS recovery_reconciliations (
+ id TEXT PRIMARY KEY, fleet_id TEXT NOT NULL REFERENCES fleets(id),
+ source_context_id TEXT NOT NULL, source_revision INTEGER NOT NULL,
+ source_plan_id TEXT NOT NULL REFERENCES recovery_plans(id),
+ target_context_id TEXT NOT NULL, target_plan_id TEXT REFERENCES recovery_plans(id),
+ data TEXT NOT NULL, actor TEXT NOT NULL, created_at TEXT NOT NULL,
+ UNIQUE(fleet_id,source_context_id,source_revision),
+ UNIQUE(fleet_id,target_context_id)
+);
 CREATE TABLE IF NOT EXISTS recovery_orders (
  id TEXT PRIMARY KEY, plan_id TEXT NOT NULL REFERENCES recovery_plans(id),
  target_asset_id TEXT NOT NULL, status TEXT NOT NULL,
