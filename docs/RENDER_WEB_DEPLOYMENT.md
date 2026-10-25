@@ -5,6 +5,38 @@ Workflows** integration. A web-service deployment does not establish that native
 Workflows ran. The earlier Workflows creation returned HTTP 402 requiring payment
 information; that historical receipt remains intact.
 
+## Actual deployment result
+
+**Live:** https://revivegraph-demo.onrender.com
+
+- Service: `srv-dbeo0gavcj2c73ditp9g`, ordinary web service, **Free**, Singapore.
+- Deploy: `dep-dbeo0gqvcj2c73ditrp0`, terminal status **live**.
+- Running source: `41e0d478898b26564ef2ad4bdffea28e749eb20c` on
+  `codex/render-free-demo`. Later documentation commits do not trigger another
+  deploy because automatic deployment is off.
+- No card was added and no paid compute plan, Nodus job or native Workflow run
+  was enabled. The Free service was accepted while the separate native Workflows
+  creation remained payment-gated. Credit balance was not queried or claimed.
+- Linux build installed the existing Python locks and built the frontend with the
+  existing npm lock successfully. No dependency versions were changed.
+- `/api/v1/health` returned HTTP 200, schema 2, `desktop-inspection-v1`.
+- The health path was set through a field-only API update because direct MCP
+  creation does not expose it. Plan, source, commands, environment and auto-deploy
+  were verified unchanged; no second deployment was triggered.
+- Actual hosted browser flow passed preview/explicit commit on the initially empty
+  server, 12 computers/31 parts, real server CPU solve, reload, desktop/390 px,
+  mocked HTML 503/retry and no browser page errors. The actual plan was OPTIMAL,
+  seven candidates, INR 2,150 and 299 assumed minutes. Physical repairs remain zero.
+- These are automated browser actions and synthetic records, not participant-entered
+  technician assessments. Hosted work-order completion was not rerun in this check.
+- The cold-start/reset policy is documented; a 15-minute sleep/reset cycle was not
+  deliberately induced. The local normal database was not opened or uploaded.
+
+Sanitized receipt: `docs/evidence/render-free-web-20261025.json`.
+Actual hosted captures: `docs/implementation-previews/render-free-web-desktop.png`
+and `render-free-web-mobile.png`. Earlier local captures and native-Workflow failure
+evidence were preserved.
+
 ## Hosting configuration
 
 Use the existing React build and FastAPI API in one same-origin service. The new

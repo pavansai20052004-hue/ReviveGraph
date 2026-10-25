@@ -1,0 +1,116 @@
+{
+  "recorded_at_utc": "2026-10-25T04:11:13.156611+00:00",
+  "scope": "Actual ordinary Free Render web hosting; separate from native Workflows",
+  "url": "https://revivegraph-demo.onrender.com",
+  "dashboard_url": "https://dashboard.render.com/web/srv-dbeo0gavcj2c73ditp9g",
+  "service_id": "srv-dbeo0gavcj2c73ditp9g",
+  "deploy_id": "dep-dbeo0gqvcj2c73ditrp0",
+  "deploy_status": "live",
+  "deploy_finished_at_utc": "2026-10-25T04:08:18.358502Z",
+  "source_commit": "41e0d478898b26564ef2ad4bdffea28e749eb20c",
+  "source_branch": "codex/render-free-demo",
+  "plan": "free",
+  "runtime": "python",
+  "region": "singapore",
+  "auto_deploy": "off",
+  "health_path": "/api/v1/health",
+  "health_status": 200,
+  "health_body": {
+    "status": "ok",
+    "schema_version": 2,
+    "rule_version": "desktop-inspection-v1"
+  },
+  "card_added": false,
+  "paid_plan_selected": false,
+  "native_workflow_runs": 0,
+  "nodus_jobs": 0,
+  "event_credit_balance": "Not verified; Free web service creation did not require a card",
+  "hosting_storage": "Shared ephemeral SQLite; reset on sleep/restart/redeploy; no durability guarantee",
+  "source_credential_pattern_check": {
+    "text_files": 126,
+    "finding_count": 0,
+    "scope": "tracked checkout and four new deployment files; not a security guarantee"
+  },
+  "validation": {
+    "host_tests": "2 passed; existing upstream Starlette deprecation warning",
+    "frontend": "typecheck and production build passed",
+    "blueprint": "authenticated valid=true, one web service",
+    "local_production_host": "browser passed desktop/390px",
+    "live_host": "actual import preview, explicit commit, inventory, CPU plan, reload, desktop/390px, mocked HTML503/retry passed"
+  },
+  "automated_simulation": {
+    "actor_scope": "Automated browser actions, not participant/technician evidence",
+    "plan_id": "plan_dfc0aedaf37841fe94e1836d9f4870f9",
+    "status": "validated",
+    "input_hash": "2622a91b2e463e54917c9c65db0b88d201d1a13ed495cffaf250564f3738b8e1",
+    "result_receipt_sha256": "71a77ed03d1ddd80585bfc1b4de2330ec9894f1630ca144e50a2920c9c37644e",
+    "solver_status": "OPTIMAL",
+    "totals": {
+      "cost_paise": 215000,
+      "newly_recovered": 7,
+      "technician_minutes": 299,
+      "transfers": 7,
+      "usable_final": 7
+    },
+    "allocations": [
+      {
+        "ram_component_ids": [
+          "RG-RAM-01"
+        ],
+        "storage_component_id": "RG-SSD-06",
+        "target_asset_id": "RG-PC-01"
+      },
+      {
+        "ram_component_ids": [
+          "RG-RAM-11"
+        ],
+        "storage_component_id": "RG-SSD-02",
+        "target_asset_id": "RG-PC-02"
+      },
+      {
+        "ram_component_ids": [
+          "RG-RAM-03"
+        ],
+        "storage_component_id": "RG-SSD-10",
+        "target_asset_id": "RG-PC-03"
+      },
+      {
+        "ram_component_ids": [
+          "RG-RAM-15"
+        ],
+        "storage_component_id": "RG-SSD-05",
+        "target_asset_id": "RG-PC-04"
+      },
+      {
+        "ram_component_ids": [
+          "RG-RAM-05"
+        ],
+        "storage_component_id": "RG-SSD-12",
+        "target_asset_id": "RG-PC-05"
+      },
+      {
+        "ram_component_ids": [
+          "RG-RAM-12"
+        ],
+        "storage_component_id": "RG-SSD-07",
+        "target_asset_id": "RG-PC-06"
+      },
+      {
+        "ram_component_ids": [
+          "RG-RAM-08"
+        ],
+        "storage_component_id": "RG-SSD-15",
+        "target_asset_id": "RG-PC-07"
+      }
+    ],
+    "physical_repairs": 0
+  },
+  "normal_local_database_opened": false,
+  "broad_application_suites_rerun": false,
+  "limitations": [
+    "Free service cold-start delay and temporary data",
+    "Unauthenticated shared synthetic demo only",
+    "Actual cold-start/reset cycle not separately induced",
+    "Native Render Workflows still billing-blocked; free hosting is not a native Workflow run"
+  ]
+}

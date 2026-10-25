@@ -5,6 +5,12 @@ configuration are available. Hosted SQLite is temporary and shared; the normal
 local database remains separate. See [web hosting setup and verification gates](docs/RENDER_WEB_DEPLOYMENT.md).
 This is separate from the billing-blocked native Render Workflows integration.
 
+**Live synthetic demo:** [revivegraph-demo.onrender.com](https://revivegraph-demo.onrender.com).
+The Free service deployed successfully on 25 October 2026 without adding a card.
+Browser verification passed actual CSV preview/commit, 12/31 inventory and a real
+hosted CPU calculation. Data resets on server sleep/restart/redeploy; export audits
+before leaving. This is a shared synthetic demonstration, not durable production storage.
+
 **Current local product — 25 October 2026:** the accepted local synthetic workflow
 now includes append-only synthetic assessment authoring and explicit post-start
 failure reconciliation. Completed component movements/evidence carry forward;
