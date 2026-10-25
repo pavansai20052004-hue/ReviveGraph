@@ -2,69 +2,65 @@
 
 ### Recover more from the computers you already have.
 
-ReviveGraph is a fleet-level recovery planner for colleges and refurbishment centres. It helps a technician find compatible, healthy parts across damaged desktop computers, then compares repair options against a cash budget and technician-time limit.
+ReviveGraph helps colleges and refurbishment centres plan how to recover usable desktop computers from a fleet of damaged machines. It checks component compatibility, evidence, ownership, cost and technician time before recommending a repair plan.
 
 **Built by:** GJV Pavan Sai · solo participant · Hackyard Build 2026, IIT Guwahati<br>
-**Demo:** [revivegraph-demo.vercel.app](https://revivegraph-demo.vercel.app/) · [Source on GitHub](https://github.com/pavansai20052004-hue/ReviveGraph)
+**Demo:** [Open ReviveGraph](https://revivegraph-demo.vercel.app/) · [GitHub repository](https://github.com/pavansai20052004-hue/ReviveGraph) · [Figma design](https://www.figma.com/design/Z3UwUmtqAq7HsMWLeYgcpV)
 
-> **Synthetic demo.** The public demo uses illustrative fleet data and a temporary shared backend. It is not a record of physical repairs. Import the synthetic fixture to begin; export any audit you need before the free server sleeps or restarts.
+![ReviveGraph fleet recovery dashboard](docs/implementation-previews/effective-dashboard-desktop.png)
 
-![ReviveGraph dashboard showing the synthetic recovery workflow](docs/implementation-previews/effective-dashboard-desktop.png)
+*Dashboard from a synthetic workflow. All counts, costs and outcomes are illustrative; no physical repairs are represented.*
 
-*Dashboard from a local synthetic workflow run. Counts and costs are fixture-based outputs, not physical repair results.*
+> **Demo data:** The hosted demo uses a temporary shared Render backend. It may contain synthetic rehearsal records or reset after the free service sleeps or restarts. Use synthetic data only, and export the audit you need before leaving.
 
-## The problem
+## What it does
 
-A desktop can be unusable because one component is faulty or missing, while another machine in the same fleet may hold a compatible spare. Reviewing computers one at a time makes those fleet-wide opportunities hard to see—and can overlook costs, technician effort, uncertain evidence, or the fact that one physical part can only be used once.
+ReviveGraph treats the fleet as one recovery problem instead of evaluating each computer in isolation. Its deterministic rules enforce supported desktop RAM and storage compatibility, distinguish health from compatibility, and prevent a physical part from being allocated twice. The optimizer compares recovery plans against hard budget and technician-time limits.
 
-ReviveGraph models the fleet together. It keeps compatibility, health evidence, ownership, location, resource limits, and technician decisions visible and separate.
-
-## Follow one recovery plan
+The supported demo flow is:
 
 ```text
-Import fleet → Inspect evidence → Check compatibility → Calculate a plan
-      → Inject a donor failure → Compare revised plan → Approve → Work orders
-      → Record simulated verification → Export the audit
+Import inventory → Review evidence → Inspect compatibility → Calculate a plan
+→ Simulate a donor failure → Compare a revised plan → Approve the plan
+→ Complete simulated work orders → Record simulated verification → Export the audit
 ```
 
-The demo needs no physical computers. Inventory health is explicitly synthetic, and work orders and verification are simulation records. Physical repair totals remain zero.
+### Example synthetic calculation
 
-### What the current implementation does
+For the versioned fixture of **12 computers and 31 components**, a validated run with a **₹2,500 budget** and **330 technician minutes** produced **7 usable final configurations**, at an assumed **₹2,150** and **299 minutes**. The same-input greedy baseline also produced 7. These are solver results for authored synthetic inputs, not measured repair outcomes or evidence of improvement over the baseline.
 
-- Imports computer and component CSVs with row-level validation and an explicit transactional commit.
-- Tracks component identity, ownership, current location, assessment evidence, and computer usability blockers.
-- Applies deterministic desktop compatibility rules for DDR3/DDR4 UDIMM memory and 2.5-inch SATA storage.
-- Runs Google OR-Tools CP-SAT against hard cash and technician-minute limits, validates the returned allocation, and compares it with a same-input greedy baseline.
-- Supports donor-failure replanning, exact-plan human decisions, reservations, prerequisite-ordered work orders, simulated checklists, verification outcomes, and audit export.
-- Preserves plans, work progress, and evidence across local application restarts.
+The fixture starts with 0 computers classified usable, 8 classified unusable and 4 with unknown usability. “Unusable” and health labels describe the synthetic data only; they are not diagnoses of real machines.
 
-### Example fixture calculation
+## Screenshots
 
-For the versioned 12-computer, 31-component synthetic fixture, a validated example run with a **₹2,500** budget and **330 technician minutes** produced **7 final usable configurations**, using **₹2,150** and **299 minutes**. The same-input greedy comparison also produced 7. These totals use authored synthetic prices and durations; they are not measured repair outcomes or a claim of improvement over the baseline.
+<p align="center">
+  <img src="docs/implementation-previews/effective-allocation-changes.png" width="48%" alt="Before and after donor failure comparison" />
+  <img src="docs/implementation-previews/effective-simulation-desktop.png" width="48%" alt="Simulated repair work and verification" />
+</p>
 
-## Try the live demo
+More desktop and mobile captures are available in [`docs/implementation-previews`](docs/implementation-previews/).
 
-Open [ReviveGraph on Vercel](https://revivegraph-demo.vercel.app/), then:
+## Technology
 
-1. Choose **Start synthetic import**.
-2. Review the preview for **12 computers and 31 components**.
-3. Commit the batch explicitly.
-4. Inspect evidence and compatibility, then calculate a plan with **₹2,500 / 330 minutes**.
-5. Continue through failure comparison, approval, work orders, simulated evidence, verification, and audit export.
+| Layer | Technology | Responsibility |
+| --- | --- | --- |
+| Frontend | React, TypeScript, Vite, Tailwind CSS, Radix UI primitives, Lucide | Responsive recovery workspace |
+| Compatibility graph | React Flow | Visual inspection of deterministic hardware decisions |
+| API and storage | Python, FastAPI, SQLite | Versioned inventory, plans, workflow records and audit history |
+| Optimizer | Google OR-Tools CP-SAT | Fleet-wide allocation under fixed cash and time limits |
+| Charts | Recharts | Actual saved plan comparisons; no fabricated history |
 
-The hosted site serves the React application from Vercel and sends `/api/v1` requests to the existing free Render service. Its database is temporary and shared; treat it as a demonstration workspace and use synthetic data only. The live instance currently starts empty and shows the import step.
-
-For an isolated, durable local run, follow the setup below. It writes to `data/revivegraph.sqlite3` and does not automatically seed the fixture.
+The initial hardware model supports DDR3/DDR4 non-ECC unbuffered desktop UDIMM memory and 2.5-inch SATA storage. Unknown health or decisive compatibility information blocks allocation. The solver and compatibility layer do not rely on an LLM.
 
 ## Run locally on Windows
 
-Requires Python 3.12+ and a recent Node.js LTS release.
+Requires Python 3.12 or newer and a recent Node.js LTS release. From the repository root:
 
 ```powershell
 .\scripts\setup.ps1
 ```
 
-Open two PowerShell terminals from the repository root:
+Start the backend and frontend in separate PowerShell terminals:
 
 ```powershell
 .\scripts\start-backend.ps1
@@ -74,9 +70,9 @@ Open two PowerShell terminals from the repository root:
 .\scripts\start-frontend.ps1
 ```
 
-Then open [http://127.0.0.1:5173](http://127.0.0.1:5173). The API docs are at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs). Stop either process with **Ctrl+C**.
+Open [http://127.0.0.1:5173](http://127.0.0.1:5173). The API documentation is at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs). Stop the services with **Ctrl+C**.
 
-If PowerShell blocks helper scripts, install from the lockfiles directly:
+Setup from the locked dependencies without helper scripts:
 
 ```powershell
 python -m venv .venv
@@ -84,73 +80,44 @@ python -m venv .venv
 npm --prefix frontend ci
 ```
 
-Start the services in separate terminals:
+The application does not automatically seed the fixture. Use the CSV import flow to add the synthetic computers and components. For isolated rehearsal data, set `REVIVEGRAPH_DB` in the backend process before startup; keep your normal database unchanged.
 
-```powershell
-.\.venv\Scripts\python.exe -m uvicorn revivegraph.main:create_app --factory --app-dir backend --host 127.0.0.1 --port 8000
-```
+## Integration status
 
-```powershell
-npm --prefix frontend run dev
-```
-
-For a separate rehearsal database, set `REVIVEGRAPH_DB` only in the backend process before starting it. Back up valuable SQLite data before changing application versions; schema migration and database backup instructions are in [Travel readiness](docs/TRAVEL_READINESS.md).
-
-## Design and engineering
-
-| Area | Implementation |
-| --- | --- |
-| Frontend | React, TypeScript, Vite, Tailwind CSS, Radix UI primitives, Lucide |
-| Interactive compatibility view | React Flow |
-| Backend and persistence | Python, FastAPI, SQLite |
-| Recovery optimization | OR-Tools CP-SAT with independent allocation validation |
-| Charts | Recharts, using actual saved plan comparisons |
-| Design reference | [ReviveGraph Figma file](https://www.figma.com/design/Z3UwUmtqAq7HsMWLeYgcpV) |
-
-The supported hardware model is intentionally constrained. Compatibility, part eligibility, ownership, resource accounting, and allocation are deterministic. Unknown health or decisive hardware details block allocation. A physical component cannot be allocated twice. Synthetic assessments are not technician-reviewed physical assessments.
-
-### Integrations and what they do
-
-| Service | How it fits ReviveGraph | What is working, and what is not |
+| Service | How it was used | Current status |
 | --- | --- | --- |
-| **Adaption** | We created a 12-example synthetic dataset to teach an explanation layer to map differently worded questions to the correct, already-existing plan facts. It covers component blockers, compatibility, uncertain evidence, and safe next actions. | One adaptation run succeeded after an estimate of **1 credit / 11 minutes**. Adaption reported dataset scores of **4.0 to 8.6** (grades **D to B**). Those are provider-reported dataset metrics, not measured answer accuracy, hardware diagnosis, or solver improvement. Actual billed credits were not returned. The accepted examples passed local checks, but runtime use is opt-in and is not enabled in the normal app. No compatibility, health, allocation, or approval decision comes from Adaption. Details: [Adaption integration record](docs/ADAPTION_INTEGRATION.md). |
-| **Nodus** | We added an optional CPU-job adapter that sends a pinned synthetic request to a remote worker running the same CP-SAT solver, then checks the returned allocation and resource totals before it can be saved. This gives us a path to cloud CPU execution without changing the recovery rules. | The adapter, worker protocol, local tests, and UI provider choice are implemented. **No real Nodus job ran:** account sign-in stopped at payment-card verification. The demo therefore uses local laptop CPU (or the configured Render worker); Nodus is disabled by default and is not needed to try the app. Details: [Nodus integration record](docs/NODUS_INTEGRATION.md). |
-| **Agent37** | Used during frontend design and explored as an optional assistant for selecting relevant facts from the current plan. | No Agent37 assistant is active in the current app. Its output was not used to make hardware, health, compatibility, or recovery decisions. |
-| **Render** | Runs the temporary backend API used by the Vercel-hosted demo. | The demo API is available, but its storage is temporary and shared. Render Workflows source and local validation were prepared; no hosted workflow deployment or hosted workflow run was completed because the account required billing details. |
+| **Adaption** | A 12-example synthetic dataset maps varied recovery questions to canonical plan fact IDs. | One adaptation run succeeded after an estimate of 1 credit and 11 minutes. The provider reported dataset scores of 4.0 → 8.6 (D → B); this does **not** measure ReviveGraph answer accuracy or hardware diagnosis. Actual billing usage was not returned. The accepted artifact is retained, but the app does not run Adaption inference. [Record](docs/ADAPTION_INTEGRATION.md) |
+| **Nodus** | An optional CPU-job adapter and output validation were prepared around the existing CP-SAT solver. | No real Nodus job ran because account activation required payment-card verification. Nodus cloud execution is postponed; it is not needed for the demo. [Record](docs/NODUS_INTEGRATION.md) |
+| **Agent37** | Used during frontend design and explored for selecting relevant facts from a saved plan. | Its runtime integration was removed. No Agent37 assistant or external AI request is active in the app. |
+| **Render** | Hosts the temporary backend API used by the Vercel demo. | The API is live. Render Workflows source and local validation exist, but no hosted workflow was deployed because billing details were required. |
 
-The decision boundary is deliberate: deterministic compatibility and CP-SAT remain authoritative. AI-related services can help organize or explain existing facts; they cannot invent health evidence, change the optimizer's output, or record physical work. The normal app continues to work without Adaption, Agent37, or Nodus.
+Compatibility, eligibility, resource accounting and allocation are deterministic. Provider-generated text cannot change component health, hardware compatibility, solver output, human decisions or physical repair records. AI diagnosis and autonomous AI remain deferred; environmental savings and physical verification are not claimed.
 
-## Verification
+## Validation
 
-The latest recorded local validation includes **176 passing backend tests**, frontend typecheck and production build, `pip check`, fixture/oracle validation, and Chromium flows covering the local recovery workflow. The test actors and synthetic evidence are automated test data, not participant-entered technician approvals.
+The recorded validation covers the synthetic fixture, backend tests, frontend typecheck and production build, and browser flows for import, calculation, failure replanning, approval, work orders, simulated verification and audit export. Automated test evidence is explicitly synthetic, not participant-entered technician evidence. See [local product status](docs/LOCAL_PRODUCT_STATUS.md) and the [onsite work record](ONSITE_WORK.md) for dated commands and results.
 
-Re-run the core checks from the repository root:
+## Project map
 
-```powershell
-.\.venv\Scripts\python.exe -m pytest -q
-.\.venv\Scripts\python.exe scripts\validate_synthetic_fixture.py
-npm --prefix frontend run typecheck
-npm --prefix frontend run build
-```
-
-Detailed results, dates, screenshots, limitations, and onsite history are recorded in [Local product status](docs/LOCAL_PRODUCT_STATUS.md), [Onsite work](ONSITE_WORK.md), and [Pre-event work](PRE_EVENT_WORK.md).
+| Path | Contents |
+| --- | --- |
+| `frontend/` | React application and browser tests |
+| `backend/` | FastAPI service, compatibility rules, optimizer and persistence |
+| `datasets/synthetic-v1/` | Versioned synthetic inventory and scenarios |
+| `docs/` | Product, architecture, design, fixture, validation and deployment records |
+| `scripts/` | Windows setup/start commands and fixture utilities |
+| `workflows/` | Prepared Render workflow source; not a live hosted workflow |
+| `PRE_EVENT_WORK.md` | Work completed before the event |
+| `ONSITE_WORK.md` | Dated event work and provider status |
 
 ## Project records
 
-| Document | What it covers |
-| --- | --- |
-| [Product specification](docs/PRODUCT_SPEC.md) | The 18 planned capabilities and acceptance criteria |
-| [Architecture](docs/ARCHITECTURE.md) | System boundaries, data model, API, rules, and AI boundaries |
-| [Implementation status](docs/IMPLEMENTATION_STATUS.md) | Current capability status and accepted scope |
-| [Synthetic fixture specification](docs/FIXTURE_SPEC.md) | Versioned inputs, assumptions, and hand-checkable cases |
-| [Build plan](docs/BUILD_PLAN.md) | Preparation, onsite milestones, and unresolved scheduling notes |
-| [UI plan and Figma references](docs/UI_PLAN.md) | Screens, design tokens, states, and design references |
-| [Local product status](docs/LOCAL_PRODUCT_STATUS.md) | Current implementation, validation, and limitations |
-| [Onsite work record](ONSITE_WORK.md) | Dated changes and actual integration evidence |
-| [Pre-event disclosure](PRE_EVENT_WORK.md) | Work completed before the event |
+- [Implementation status, including all 18 planned capabilities](docs/IMPLEMENTATION_STATUS.md)
+- [Product specification](docs/PRODUCT_SPEC.md) · [Architecture](docs/ARCHITECTURE.md) · [Build plan](docs/BUILD_PLAN.md)
+- [Synthetic fixture specification](docs/FIXTURE_SPEC.md) · [UI plan and design references](docs/UI_PLAN.md)
+- [Adaption integration](docs/ADAPTION_INTEGRATION.md) · [Nodus integration](docs/NODUS_INTEGRATION.md) · [Render deployment](docs/RENDER_WEB_DEPLOYMENT.md)
+- [Pre-event disclosure](PRE_EVENT_WORK.md) · [Onsite work record](ONSITE_WORK.md)
 
-## Scope and limits
+## License
 
-AI diagnosis and autonomous AI remain deferred. Physical diagnostics, technician-verified repairs, and environmental savings are not claimed. Environmental estimates remain unavailable without sourced assumptions. Hosted demo storage is temporary and shared; use the local application for durable project data.
-
-The repository currently has no license file. Public visibility alone does not grant permission to reuse or redistribute the project.
+No license is currently provided. Public visibility does not grant permission to reuse or redistribute this project.
